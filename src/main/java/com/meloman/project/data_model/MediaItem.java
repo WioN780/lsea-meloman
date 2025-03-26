@@ -2,66 +2,55 @@ package com.meloman.project.data_model;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.Set;
 
 /**
- * Represents a music track, extending the MediaItem class.
- * Includes additional metadata such as duration.
+ * Abstract class representing a general media item.
  */
 @Getter
 @Setter
-public class Track extends MediaItem implements Cloneable {
+public abstract class MediaItem implements Cloneable, Comparable<MediaItem> {
 
-    /**
-     * Duration of the track in minutes.
-     */
-    private double duration;
+    protected String id;
+    protected String title;
+    protected int year;
+    protected Set<String> genres;
+    protected Set<String> styles;
+    protected Artist artist;
+    protected Label label;
 
-    /**
-     * Constructs a new Track instance with the specified attributes.
-     *
-     * @param id       unique identifier of the track
-     * @param title    title of the track
-     * @param year     release year of the track
-     * @param genres   set of genres associated with the track
-     * @param styles   set of musical styles of the track
-     * @param artist   the artist associated with the track
-     * @param label    the label that produced or published the track
-     * @param duration the duration of the track in minutes
-     */
-    public Track(String id, String title, int year, Set<String> genres, Set<String> styles,
-                 Artist artist, Label label, double duration) {
-        super(id, title, year, genres, styles, artist, label);
-        this.duration = duration;
+    public MediaItem(String id, String title, int year, Set<String> genres, Set<String> styles,
+                     Artist artist, Label label) {
+        this.id = id;
+        this.title = title;
+        this.year = year;
+        this.genres = genres;
+        this.styles = styles;
+        this.artist = artist;
+        this.label = label;
     }
 
-    /**
-     * Creates and returns a shallow clone of this Track.
-     * Uses the cloning mechanism from the superclass.
-     *
-     * @return a clone of this Track
-     */
+    public abstract void displayInfo();
+
     @Override
-    public Track clone() {
-        return (Track) super.clone();
+    public int compareTo(MediaItem other) {
+        return Integer.compare(this.year, other.year);
     }
 
-    /**
-     * Displays basic information about the track to the console.
-     * Includes the title and duration.
-     */
     @Override
-    public void displayInfo() {
-        System.out.println("Track: " + getTitle() + " (" + duration + " mins)");
+    public MediaItem clone() {
+        try {
+            return (MediaItem) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
-    /**
-     * Returns a string representation of the Track object.
-     *
-     * @return a string containing the track ID, title, and duration
-     */
     @Override
     public String toString() {
-        return "Track [id=" + getId() + ", title=" + getTitle() + ", duration=" + duration + "]";
+        return "MediaItem [id=" + id + ", title=" + title + ", year=" + year +
+                ", genres=" + genres + ", styles=" + styles +
+                ", artist=" + artist.getName() + ", label=" + label.getName() + "]";
     }
 }
