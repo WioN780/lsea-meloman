@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ public class Label extends MediaOwner {
     private String contactInfo;
 
     public Label(String id, String name, String parentLabel, List<String> subLabels,
-                 List<MediaItem> ownedItems, List<String> urls, String contactInfo) {
+                 List<MediaItem> ownedItems, Set<String> urls, String contactInfo) {
         super(id, name, ownedItems, urls);
         this.parentLabel = parentLabel;
         this.subLabels = subLabels;
