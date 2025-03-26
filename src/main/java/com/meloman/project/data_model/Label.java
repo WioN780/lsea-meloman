@@ -2,7 +2,7 @@ package com.meloman.project.data_model;
 
 import lombok.Getter;
 import lombok.Setter;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,10 +10,10 @@ import java.util.Set;
 @Setter
 public class Label extends MediaOwner {
     private String parentLabel;
-    private List<String> subLabels;
+    private Set<String> subLabels;
     private String contactInfo;
 
-    public Label(String id, String name, String parentLabel, List<String> subLabels,
+    public Label(String id, String name, String parentLabel, Set<String> subLabels,
                  List<MediaItem> ownedItems, Set<String> urls, String contactInfo) {
         super(id, name, ownedItems, urls);
         this.parentLabel = parentLabel;
@@ -25,7 +25,7 @@ public class Label extends MediaOwner {
     public Label clone() {
         Label cloned = (Label) super.clone();
         if (this.subLabels != null) {
-            cloned.setSubLabels(new ArrayList<>(this.subLabels));
+            cloned.setSubLabels(new HashSet<>(this.subLabels));
         }
         return cloned;
     }
