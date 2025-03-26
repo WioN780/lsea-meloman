@@ -10,19 +10,49 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * <ID> the type of the user ID, can store any value as ID (experimental)
+ * Class representing potential user of the application
+ *
+ * <ID> the type of the user ID, provides storing any value as ID (experimental)
+ *
  */
 @Getter
 @Setter
 public class User<ID> implements Cloneable {
 
+    /**
+     * Unique user identifier
+     */
     private ID userId;
+    /**
+     * Nickname of the user on the app
+     */
     private String username;
+    /**
+     * Email of the user on the application
+     */
     private String email;
+    /**
+     * Phone number of the user on the application(with country code)
+     */
     private String phoneNumber;
+    /**
+     * Abstract list of any owned Media Items
+     */
     private List<MediaItem> ownedItems;
+    /**
+     * Abstract set of any liked Media Items
+     */
     private Set<MediaItem> likedItems;
 
+    /**
+     * Constructs a new User instance with the provided user ID, username, email, and phone number.
+     * Initializes empty collections for owned and liked media items.
+     *
+     * @param userId      the unique ID of the user
+     * @param username    the user's chosen username
+     * @param email       the user's email address
+     * @param phoneNumber the user's phone number
+     */
     public User(ID userId, String username, String email, String phoneNumber) {
         this.userId = userId;
         this.username = username;
@@ -32,14 +62,32 @@ public class User<ID> implements Cloneable {
         this.likedItems = new HashSet<>();
     }
 
+    /**
+     * Adds a media item to the list of items owned by the user.
+     *
+     * @param item the media item to add
+     */
     public void addOwnedItem(MediaItem item) {
         this.ownedItems.add(item);
     }
 
+    /**
+     * Adds a media item to the set of items liked by the user.
+     *
+     * @param item the media item to add
+     */
     public void likeItem(MediaItem item) {
         this.likedItems.add(item);
     }
 
+    /**
+     * Creates and returns a deep copy of this user.
+     * Both the owned and liked media item collections are cloned,
+     * along with their contents.
+     *
+     * @return a clone of this user
+     * @throws AssertionError if cloning is not supported
+     */
     @Override
     public User<ID> clone() {
         try {
@@ -63,6 +111,11 @@ public class User<ID> implements Cloneable {
         }
     }
 
+    /**
+     * Override for printing full information about the user
+     *
+     * @return String containing formatted info
+     */
     @Override
     public String toString() {
         return "User [userId=" + userId +
