@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ public class Artist extends MediaOwner {
     private List<String> groups;
 
     public Artist(String id, String name,
-                  String realName, List<String> aliases, List<String> groups, List<String> urls) {
+                  String realName, List<String> aliases, List<String> groups, Set<String> urls) {
         super(id, name, new ArrayList<>(), urls);
         this.realName = realName;
         this.aliases = aliases;
@@ -22,7 +23,7 @@ public class Artist extends MediaOwner {
     }
 
     public Artist(String id, String name, List<MediaItem> ownedItems,
-                  String realName, List<String> aliases, List<String> groups, List<String> urls) {
+                  String realName, List<String> aliases, List<String> groups, Set<String> urls) {
         super(id, name, ownedItems, urls);
         this.realName = realName;
         this.aliases = aliases;

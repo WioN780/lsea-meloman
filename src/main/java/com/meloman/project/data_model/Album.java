@@ -2,8 +2,10 @@ package com.meloman.project.data_model;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Collectors;
 
@@ -13,9 +15,9 @@ public class Album extends MediaItem {
 
     private List<Track> tracks;
 
-    public Album(String id, String title, int year, List<String> genres, List<String> styles, Artist artist, Label label) {
+    public Album(String id, String title, int year, Set<String> genres, Set<String> styles, Artist artist, Label label, List<Track> tracks) {
         super(id, title, year, genres, styles, artist, label);
-        this.tracks = new ArrayList<>();
+        this.tracks = tracks;
     }
 
     @Override

@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Abstract base class representing an owner of media.
@@ -12,31 +14,45 @@ import java.util.List;
 
 @Getter
 @Setter
-public abstract class MediaOwner implements Cloneable {
+public abstract class MediaOwner implements Cloneable, Comparable<MediaOwner> {
     protected String id;
     protected String name;
     protected List<MediaItem> ownedItems;
-    protected List<String> urls;
+    protected Set<String> urls;
 
     public MediaOwner(String id, String name) {
         this.id = id;
         this.name = name;
         this.ownedItems = new ArrayList<>();
-        this.urls = new ArrayList<>();
+        this.urls = new HashSet<String>() {
+        };
     }
 
     public MediaOwner(String id, String name, List<MediaItem> ownedItems) {
         this.id = id;
         this.name = name;
         this.ownedItems = ownedItems;
-        this.urls = new ArrayList<>();
+        this.urls = new HashSet<String>();
     }
 
-    public MediaOwner(String id, String name, List<MediaItem> ownedItems, List<String> urls) {
+    public MediaOwner(String id, String name, List<MediaItem> ownedItems, Set<String> urls) {
         this.id = id;
         this.name = name;
         this.ownedItems = ownedItems;
         this.urls = urls;
+    }
+
+    @Override
+    public int compareTo(MediaOwner other) {
+        if (this.name == null && other.name == null) {
+            return 0;
+        } else if (this.name == null) {
+            return -1;
+        } else if (other.name == null) {
+            return 1;
+        } else {
+            return this.name.compareToIgnoreCase(other.name);
+        }
     }
 
     @Override
@@ -51,7 +67,7 @@ public abstract class MediaOwner implements Cloneable {
                 cloned.setOwnedItems(clonedItems);
             }
             if (this.urls != null) {
-                cloned.setUrls(new ArrayList<>(this.urls));
+                cloned.setUrls(new HashSet<>(this.urls));
             }
             return cloned;
         } catch (CloneNotSupportedException e) {
