@@ -11,8 +11,8 @@ public class TestMain {
         Artist artist2 = new Artist("A2", "Artist Two", "Real Name Two", Arrays.asList("Alias3", "Alias4"), Arrays.asList("Group2"), new HashSet<>(Arrays.asList("www.artisttwo.com")));
 
         // Create some dummy Labels
-        Label label1 = new Label("L1", "Label One", "Parent Label One", Arrays.asList("SubLabel1", "SubLabel2"), new ArrayList<>(), new HashSet<>(Arrays.asList("www.labelone.com")), "contact@labelone.com");
-        Label label2 = new Label("L2", "Label Two", "Parent Label Two", Arrays.asList("SubLabel3", "SubLabel4"), new ArrayList<>(), new HashSet<>(Arrays.asList("www.labeltwo.com")), "contact@labeltwo.com");
+        Label label1 = new Label("L1", "Label One", "Parent Label One", (Set<String>) Arrays.asList("SubLabel1", "SubLabel2"), new ArrayList<>(), new HashSet<>(Arrays.asList("www.labelone.com")), "contact@labelone.com");
+        Label label2 = new Label("L2", "Label Two", "Parent Label Two", (Set<String>) Arrays.asList("SubLabel3", "SubLabel4"), new ArrayList<>(), new HashSet<>(Arrays.asList("www.labeltwo.com")), "contact@labeltwo.com");
 
         // Create some dummy Tracks
         Track track1 = new Track("T1", "Track One", 2020, new HashSet<>(Arrays.asList("Rock", "Pop")), new HashSet<>(Arrays.asList("Indie")), artist1, label1, 3.5);
