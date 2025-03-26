@@ -25,10 +25,10 @@ public abstract class MediaItem implements Cloneable, Comparable<MediaItem> {
     /** Release year of the media item. */
     protected int year;
 
-    /** Set of genres associated with the media item (e.g., Rock, Jazz). */
+    /** Set of genres associated with the media item. */
     protected Set<String> genres;
 
-    /** Set of styles associated with the media item (e.g., Psychedelic Rock, Cool Jazz). */
+    /** Set of styles associated with the media item. */
     protected Set<String> styles;
 
     /** Artist associated with the media item. */
@@ -69,8 +69,7 @@ public abstract class MediaItem implements Cloneable, Comparable<MediaItem> {
      * Compares this MediaItem to another based on their release year.
      *
      * @param other the other MediaItem to compare with
-     * @return a negative integer, zero, or a positive integer if this item's year
-     *         is less than, equal to, or greater than the specified item's year
+     * @return a negative integer, zero, or a positive integer to show the difference
      */
     @Override
     public int compareTo(MediaItem other) {

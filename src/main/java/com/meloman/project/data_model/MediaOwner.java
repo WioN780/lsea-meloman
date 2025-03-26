@@ -82,12 +82,11 @@ public abstract class MediaOwner implements Cloneable, Comparable<MediaOwner> {
     }
 
     /**
-     * Compares this MediaOwner to another based on their names (case-insensitive).
-     * Handles null values gracefully.
+     * Compares this MediaOwner to another based on their names.
+     * Handles null values.
      *
      * @param other the other MediaOwner to compare to
-     * @return a negative integer, zero, or a positive integer as this object is less than,
-     *         equal to, or greater than the specified object
+     * @return a negative integer, zero, or a positive integer to show the difference
      */
     @Override
     public int compareTo(MediaOwner other) {
