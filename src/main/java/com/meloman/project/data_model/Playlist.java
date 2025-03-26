@@ -45,6 +45,7 @@ public class Playlist {
 
     /**
      * Calculates the number of unique albums in the playlist based on track album IDs.
+     * Updates the {@code numAlbums} field.
      */
     private void calculateNumAlbums() {
         Set<String> albumIds = new HashSet<>();
@@ -56,6 +57,7 @@ public class Playlist {
 
     /**
      * Calculates the number of unique artists in the playlist based on track artist names.
+     * Updates the {@code numArtists} field.
      */
     private void calculateNumArtists() {
         Set<String> artistNames = new HashSet<>();
