@@ -1,5 +1,8 @@
 package com.meloman.project.data_model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,6 +10,8 @@ import java.util.Set;
  * Represents a music playlist containing a set of tracks.
  * Stores metadata such as the number of albums, artists, and followers.
  */
+@Getter
+@Setter
 public class Playlist {
 
     /**
