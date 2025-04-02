@@ -47,6 +47,10 @@ public class Artist extends MediaOwner {
         this.groups = groups;
     }
 
+    public Artist(String artistId, String artistName) {
+        super(artistId, artistName);
+    }
+
     /**
      * Creates a deep clone of the artist, including cloning the aliases and groups.
      *

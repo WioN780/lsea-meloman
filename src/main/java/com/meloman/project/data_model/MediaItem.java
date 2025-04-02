@@ -3,6 +3,7 @@ package com.meloman.project.data_model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -57,6 +58,19 @@ public abstract class MediaItem implements Cloneable, Comparable<MediaItem> {
         this.styles = styles;
         this.artist = artist;
         this.label = label;
+    }
+
+    public MediaItem (String id) {
+        this.id = id;
+    }
+
+    public MediaItem(String id, String title, Artist artist, Label label) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.label = label;
+        this.genres = new HashSet<String>();
+        this.styles = new HashSet<String>();
     }
 
     /**
