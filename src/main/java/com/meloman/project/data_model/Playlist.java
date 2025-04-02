@@ -58,12 +58,10 @@ public class Playlist {
      * Calculates the number of unique artists in the playlist based on track artist names.
      */
     private void calculateNumArtists() {
-        Set<String> artistNames = new HashSet<>();
+        Set<String> artistIds = new HashSet<>();
         for (Track track : tracks) {
-            if (track.getArtist() != null) {
-                artistNames.add(track.getArtist().getName());
+            artistIds.add(track.getArtist().getId());
             }
-        }
-        this.numArtists = artistNames.size();
+        this.numArtists = artistIds.size();
     }
 }
