@@ -1,6 +1,6 @@
 package com.meloman.project.entry_points;
 import com.meloman.project.data_model.Album;
-import com.meloman.project.data_model.DataLoader;
+import com.meloman.project.utils.DataLoader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -12,7 +12,7 @@ public class ProcessingTest {
             DataLoader loader = new DataLoader();
 
             InputStream inputStream = Main.class.getClassLoader()
-                    .getResourceAsStream("com/meloman/project/data/data.csv");
+                    .getResourceAsStream("com/meloman/project/data/DiscoGSdata.csv");
 
             if (inputStream == null) {
                 throw new IOException("Artxiboa ez da aurkitu");
