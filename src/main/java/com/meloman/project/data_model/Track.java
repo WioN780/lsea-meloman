@@ -35,6 +35,14 @@ public class Track extends MediaItem implements Cloneable {
         this.duration = duration;
     }
 
+    public Track(String id, String trackTitle, double duration, Artist artist, Label label) {
+        super(id);
+        this.title = trackTitle;
+        this.duration = duration;
+        this.artist = artist;
+        this.label = label;
+    }
+
     /**
      * Creates and returns a shallow clone of this Track.
      * Uses the cloning mechanism from the superclass.
