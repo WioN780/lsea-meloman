@@ -2,7 +2,6 @@ package com.meloman.project.entry_points;
 import com.meloman.project.data_model.Album;
 import com.meloman.project.data_model.Playlist;
 import com.meloman.project.utils.DiscoGSLoader;
-import com.meloman.project.utils.DiscoGSLoaderBatches;
 import com.meloman.project.utils.SpotifyPlaylistLoader;
 
 import java.io.IOException;
@@ -15,15 +14,14 @@ public class ProcessingTest {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Select a test to run:");
         System.out.println("1: Test PlaylistJsonLoader");
-        System.out.println("2: Test DiscoGSLoaderBatches");
-        System.out.println("3: Test DiscoGSLoader");
-        System.out.print("Enter your choice (1-3): ");
+        System.out.println("2: Test DiscoGSLoader");
+        System.out.print("Enter your choice (1-2): ");
 
         int choice = 0;
         try {
             choice = scanner.nextInt();
         } catch (Exception e) {
-            System.err.println("Invalid input. Please enter a number between 1 and 3.");
+            System.err.println("Invalid input. Please enter a number between 1 and 2.");
             return;
         }
 
@@ -63,30 +61,8 @@ public class ProcessingTest {
 
 
         }
-
-        // Test DiscoGSLoaderBatches
-        else if (choice == 2) {
-            try {
-                DiscoGSLoaderBatches loader = new DiscoGSLoaderBatches();
-
-                InputStream inputStream = SpotifyPlaylistLoader.class.getClassLoader()
-                        .getResourceAsStream("com/meloman/project/data/DiscoGSdata.csv");
-
-                if (inputStream == null) {
-                    throw new IOException("File not found: DiscoGSdata.csv");
-                }
-
-                List<Album> albums = loader.loadAlbums(inputStream);
-                System.out.println(albums.size() + " albums loaded");
-
-            } catch (IOException e) {
-                System.err.println("Error: " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-
         // Test DiscoGSLoader
-        else if (choice == 3) {
+        else if (choice == 2) {
             try {
                 DiscoGSLoader loader = new DiscoGSLoader();
 
@@ -107,9 +83,8 @@ public class ProcessingTest {
         }
 
         else {
-            System.out.println("Invalid choice. Please run again and select a number between 1 and 3.");
+            System.out.println("Invalid choice. Please run again and select a number between 1 and 2.");
         }
-
         scanner.close();
     }
 }
