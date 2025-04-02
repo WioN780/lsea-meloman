@@ -8,7 +8,7 @@ import com.meloman.project.data_model.Track;
 import java.io.*;
 import java.util.*;
 
-public class DataLoader {
+public class DiscoGSLoader {
 
     // Maps to avoid duplicate creations.
     private Map<String, Artist> artistMap = new HashMap<>();
@@ -40,11 +40,12 @@ public class DataLoader {
         String line;
         // Skip the header row.
         reader.readLine();
+
         while ((line = reader.readLine()) != null) {
             processLineDiscoGS(line, albums);
             processedLines++;
 
-            if (processedLines >= 1500000) { //Limit for now until further optimization.
+            if (processedLines % 100 == 0) { //Limit for now until further optimization.
                 //System.out.println(processedLines + " linea prozetatutak.");
                 //System.out.println(albums.get(albums.size() - 1).toString());
                 System.out.println("Album guztiak: " + albums.size());
