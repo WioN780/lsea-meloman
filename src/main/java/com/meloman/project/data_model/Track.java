@@ -27,7 +27,7 @@ public class Track extends MediaItem implements Cloneable {
      * @param styles   set of musical styles of the track
      * @param artist   the artist associated with the track
      * @param label    the label that produced or published the track
-     * @param duration the duration of the track in minutes
+     * @param duration the duration of the track in seconds
      */
     public Track(String id, String title, int year, Set<String> genres, Set<String> styles,
                  Artist artist, Label label, double duration) {
@@ -60,7 +60,7 @@ public class Track extends MediaItem implements Cloneable {
      */
     @Override
     public void displayInfo() {
-        System.out.println("Track: " + getTitle() + " (" + duration + " mins)");
+        System.out.println("Track: " + getTitle() + " (" + duration + " seconds)");
     }
 
     /**

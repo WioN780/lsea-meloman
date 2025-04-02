@@ -1,4 +1,9 @@
-package com.meloman.project.data_model;
+package com.meloman.project.utils;
+
+import com.meloman.project.data_model.Album;
+import com.meloman.project.data_model.Artist;
+import com.meloman.project.data_model.Label;
+import com.meloman.project.data_model.Track;
 
 import java.io.*;
 import java.util.*;
@@ -9,6 +14,18 @@ public class DataLoader {
     private Map<String, Artist> artistMap = new HashMap<>();
     private Map<String, Label> labelMap = new HashMap<>();
     private Map<String, Album> albumMap = new HashMap<>();
+
+    // Define static constants for default values
+    private static final String UNKNOWN_ARTIST = "Unknown Artist";
+    private static final String UNKNOWN_ID = "unknown_id";
+    private static final String UNKNOWN_LABEL = "Unknown Label";
+    private static final String UNKNOWN_LABEL_ID = "unknown_label";
+    private static final String UNKNOWN_GENRE = "Unknown Genre";
+    private static final String UNTITLED_ALBUM = "Untitled Album";
+    private static final String UNKNOWN_ALBUM_ID = "unknown_album";
+    private static final String UNTITLED_TRACK = "Untitled Track";
+    private static final String DEFAULT_TRACK_DURATION = "0:00";
+    private static final String UNKNOWN_STYLE = "Unknown Style";
 
     /**
      * Loads albums from the provided CSV InputStream.
@@ -24,12 +41,13 @@ public class DataLoader {
         // Skip the header row.
         reader.readLine();
         while ((line = reader.readLine()) != null) {
-            processLine(line, albums);
+            processLineDiscoGS(line, albums);
             processedLines++;
 
             if (processedLines >= 1500000) { //Limit for now until further optimization.
-                System.out.println(processedLines + " linea prozetatutak.");
-                System.out.println(albums.get(albums.size() - 1).toString());
+                //System.out.println(processedLines + " linea prozetatutak.");
+                //System.out.println(albums.get(albums.size() - 1).toString());
+                System.out.println("Album guztiak: " + albums.size());
             }
         }
         reader.close();
@@ -38,7 +56,7 @@ public class DataLoader {
         return albums;
     }
 
-    private void processLine(String line, List<Album> albums) {
+    private void processLineDiscoGS(String line, List<Album> albums) {
         if (line == null || line.trim().isEmpty()) return;
         // Assuming CSV columns do not include commas inside fields.
         String[] parts = line.split(",");
@@ -51,20 +69,20 @@ public class DataLoader {
         // 6: release_master_id, 7: root_release_id,
         // 8: track_title, 9: track_duration, 10: styles_style
 
-        // Replace empty values with defaults.
-        String artistName       = parts[0].trim().isEmpty() ? "Unknown Artist" : parts[0].trim();
-        String artistId         = parts[1].trim().isEmpty() ? "unknown_id" : parts[1].trim();
-        String labelId          = parts[2].trim().isEmpty() ? "unknown_label" : parts[2].trim();
-        String labelName        = parts[3].trim().isEmpty() ? "Unknown Label" : parts[3].trim();
-        String genre            = parts[4].trim().isEmpty() ? "Unknown Genre" : parts[4].trim();
-        String albumTitle       = parts[5].trim().isEmpty() ? "Untitled Album" : parts[5].trim();
+
+        String artistName       = parts[0].trim().isEmpty() ? UNKNOWN_ARTIST : parts[0].trim();
+        String artistId         = parts[1].trim().isEmpty() ? UNKNOWN_ID : parts[1].trim();
+        String labelId          = parts[2].trim().isEmpty() ? UNKNOWN_LABEL_ID : parts[2].trim();
+        String labelName        = parts[3].trim().isEmpty() ? UNKNOWN_LABEL : parts[3].trim();
+        String genre            = parts[4].trim().isEmpty() ? UNKNOWN_GENRE : parts[4].trim();
+        String albumTitle       = parts[5].trim().isEmpty() ? UNTITLED_ALBUM : parts[5].trim();
         String releaseMasterId  = parts[6].trim().isEmpty() ? "0" : parts[6].trim();
-        String rootReleaseId    = parts[7].trim().isEmpty() ? "unknown_album" : parts[7].trim();
+        String rootReleaseId    = parts[7].trim().isEmpty() ? UNKNOWN_ALBUM_ID : parts[7].trim();
         // Use rootReleaseId if releaseMasterId equals "0" or is empty.
         String albumId          = "0".equals(releaseMasterId) ? rootReleaseId : releaseMasterId;
-        String trackTitle       = parts[8].trim().isEmpty() ? "Untitled Track" : parts[8].trim();
-        String trackDurationStr = parts[9].trim().isEmpty() ? "0:00" : parts[9].trim();
-        String style            = parts[10].trim().isEmpty() ? "Unknown Style" : parts[10].trim();
+        String trackTitle       = parts[8].trim().isEmpty() ? UNTITLED_TRACK : parts[8].trim();
+        String trackDurationStr = parts[9].trim().isEmpty() ? DEFAULT_TRACK_DURATION : parts[9].trim();
+        String style            = parts[10].trim().isEmpty() ? UNKNOWN_STYLE : parts[10].trim();
 
         // Get or create Artist.
         Artist artist = artistMap.get(artistId);
@@ -109,7 +127,7 @@ public class DataLoader {
         try {
             int minutes = Integer.parseInt(timeParts[0]);
             int seconds = Integer.parseInt(timeParts[1]);
-            return minutes + seconds / 60.0;
+            return minutes * 60.0 + seconds;
         } catch (NumberFormatException e) {
             return 0.0;
         }
