@@ -38,6 +38,11 @@ public class Label extends MediaOwner {
         this.contactInfo = contactInfo;
     }
 
+    public Label(String labelId, String labelName) {
+        super(labelId, labelName);
+
+    }
+
     /**
      * Creates a deep clone of the label, including cloning the sub-labels set.
      *
