@@ -1,5 +1,6 @@
 package com.meloman.project.data_model;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
@@ -10,6 +11,8 @@ import java.util.Set;
  * Stores metadata such as name, collaborative status, ID, modification date,
  * and the number of albums, artists, and followers.
  */
+@Getter
+@Setter
 public class Playlist {
 
     /**
