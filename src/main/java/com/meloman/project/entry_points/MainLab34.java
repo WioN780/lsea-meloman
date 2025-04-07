@@ -15,12 +15,12 @@ public class MainLab34 {
     public static void main(String[] args) throws IOException {
         List<Playlist> playlists = new ArrayList<>();
 
-        int num_of_slices = 100;
+        int num_of_slices = 300;
+
+        SpotifyPlaylistLoader loaderPlaylists = new SpotifyPlaylistLoader();
 
         for (int j = 0; j < num_of_slices; j++) {
             try {
-                SpotifyPlaylistLoader loaderPlaylists = new SpotifyPlaylistLoader();
-
                 String file = "spotify/mpd.slice." + 1000 * j + "-" + ((1000 * (j + 1)) - 1) + ".json";
 
                 InputStream inputStreamPlaylists = SpotifyPlaylistLoader.class.getClassLoader()
@@ -32,16 +32,6 @@ public class MainLab34 {
 
                 playlists.addAll(loaderPlaylists.loadPlaylists(inputStreamPlaylists));
                 System.out.println(playlists.size() + " playlists loaded");
-
-                // Print details of first few playlists if available
-                int playlistsToPrint = Math.min(3, playlists.size());
-                for (int i = 0; i < playlistsToPrint; i++) {
-                    System.out.println("\nPlaylist " + (i + 1) + " details:");
-                    System.out.println(playlists.get(i).toString());
-                    System.out.println("Number of tracks: " + playlists.get(i).getNumTracks());
-                    System.out.println("Number of albums: " + playlists.get(i).getNumAlbums());
-                    System.out.println("Number of artists: " + playlists.get(i).getNumArtists());
-                }
 
             } catch (IOException e) {
                 System.err.println("Error: " + e.getMessage());
@@ -60,7 +50,7 @@ public class MainLab34 {
 
         List<Album> albums = loaderAlbums.loadAlbums(inputStreamAlbums);
         System.out.println(albums.size() + " albums loaded");
-
+        System.out.println(playlists.size() + " playlists loaded");
 
         AnalysisRunner ar = new AnalysisRunner(albums, playlists);
 
