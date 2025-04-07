@@ -4,15 +4,12 @@ import com.meloman.project.data_model.Album;
 import com.meloman.project.data_model.Playlist;
 import com.meloman.project.data_model.Track;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AnalysisRunner {
 
-    private final static Integer TIMES = 5;
+    private final static Integer TIMES = 10;
 
     private List<Album> albums;
     private List<Playlist> playlists;
@@ -61,8 +58,16 @@ public class AnalysisRunner {
                             Collectors.summingInt(track -> 1)
                     ));
 
+            //sorting by integer
+//            List<Map.Entry<Album, Integer>> sortedAlbumCounts = albumToCount.entrySet()
+//                    .stream().sequential()
+//                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+//                    .collect(Collectors.toList());
+
+
             long end = System.currentTimeMillis();
-            System.out.println("Single-threaded analysis №" + TIMES + " completed in " + (end - start) + " ms.");
+            System.out.println("Single-threaded analysis №" + (i + 1) + " completed in " + (end - start) + " ms.");
+//            System.out.println("Album with most occurences: " + sortedAlbumCounts.get(0).toString());
         }
     }
 
@@ -93,8 +98,15 @@ public class AnalysisRunner {
                             Collectors.summingInt(track -> 1)
                     ));
 
+            //sorting by integer
+//            List<Map.Entry<Album, Integer>> sortedAlbumCounts = albumToCount.entrySet()
+//                    .stream().parallel()
+//                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+//                    .collect(Collectors.toList());
+
             long end = System.currentTimeMillis();
-            System.out.println("Parallel analysis №" + TIMES + " completed in " + (end - start) + " ms.");
+            System.out.println("Parallel analysis №" + (i + 1) + " completed in " + (end - start) + " ms.");
+//            System.out.println("Album with most occurences: " + sortedAlbumCounts.get(0).toString());
         }
 
         //for custom thread number

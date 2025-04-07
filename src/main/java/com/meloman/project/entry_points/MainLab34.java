@@ -1,0 +1,70 @@
+package com.meloman.project.entry_points;
+
+import com.meloman.project.data_model.Album;
+import com.meloman.project.data_model.Playlist;
+import com.meloman.project.utils.AnalysisRunner;
+import com.meloman.project.utils.DiscoGSLoader;
+import com.meloman.project.utils.SpotifyPlaylistLoader;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainLab34 {
+    public static void main(String[] args) throws IOException {
+        List<Playlist> playlists = new ArrayList<>();
+
+        int num_of_slices = 10;
+
+        for (int j = 0; j < num_of_slices; j++) {
+            try {
+                SpotifyPlaylistLoader loaderPlaylists = new SpotifyPlaylistLoader();
+
+                String file = "mpd.slice." + 1000 * j + "-" + ((1000 * (j + 1)) - 1) + ".json";
+
+                InputStream inputStreamPlaylists = SpotifyPlaylistLoader.class.getClassLoader()
+                        .getResourceAsStream(file);
+
+                if (inputStreamPlaylists == null) {
+                    throw new IOException("File not found." + file);
+                }
+
+                playlists = loaderPlaylists.loadPlaylists(inputStreamPlaylists);
+                System.out.println(playlists.size() + " playlists loaded");
+
+                // Print details of first few playlists if available
+                int playlistsToPrint = Math.min(3, playlists.size());
+                for (int i = 0; i < playlistsToPrint; i++) {
+                    System.out.println("\nPlaylist " + (i + 1) + " details:");
+                    System.out.println(playlists.get(i).toString());
+                    System.out.println("Number of tracks: " + playlists.get(i).getNumTracks());
+                    System.out.println("Number of albums: " + playlists.get(i).getNumAlbums());
+                    System.out.println("Number of artists: " + playlists.get(i).getNumArtists());
+                }
+
+            } catch (IOException e) {
+                System.err.println("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        DiscoGSLoader loaderAlbums = new DiscoGSLoader();
+
+        InputStream inputStreamAlbums = SpotifyPlaylistLoader.class.getClassLoader()
+                .getResourceAsStream("DiscoGSdata.csv");
+
+        if (inputStreamAlbums == null) {
+            throw new IOException("File not found: DiscoGSdata.csv");
+        }
+
+        List<Album> albums = loaderAlbums.loadAlbums(inputStreamAlbums, 1500000);
+        System.out.println(albums.size() + " albums loaded");
+
+
+        AnalysisRunner ar = new AnalysisRunner(albums, playlists);
+
+        ar.singleThreadAnalysis();
+        ar.parallelThreadAnalysis();
+    }
+}
