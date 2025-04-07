@@ -27,11 +27,11 @@ public class ProcessingTest {
 
         // Test PlaylistJsonLoader
         if (choice == 1) {
-            for (int j = 0; j < 11; j++) {
+            for (int j = 0; j < 1; j++) {
                 try {
                     SpotifyPlaylistLoader loader = new SpotifyPlaylistLoader();
 
-                    String file = "com/meloman/project/data/mpd.slice." + 1000 * j + "-" + ((1000 * (j + 1)) - 1) + ".json";
+                    String file = "mpd.slice." + 1000 * j + "-" + ((1000 * (j + 1)) - 1) + ".json";
 
                     InputStream inputStream = SpotifyPlaylistLoader.class.getClassLoader()
                             .getResourceAsStream(file);
@@ -67,7 +67,7 @@ public class ProcessingTest {
                 DiscoGSLoader loader = new DiscoGSLoader();
 
                 InputStream inputStream = SpotifyPlaylistLoader.class.getClassLoader()
-                        .getResourceAsStream("com/meloman/project/data/DiscoGSdata.csv");
+                        .getResourceAsStream("DiscoGSdata.csv");
 
                 if (inputStream == null) {
                     throw new IOException("File not found: DiscoGSdata.csv");

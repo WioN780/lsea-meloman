@@ -30,6 +30,37 @@ public class DiscoGSLoader {
     /**
      * Loads albums from the provided CSV InputStream.
      * @param inputStream the input stream of the CSV file.
+     * @param maxAlbums Maximum number of albums to be loaded.
+     * @return list of Album objects.
+     * @throws IOException if an I/O error occurs.
+     */
+    public List<Album> loadAlbums(InputStream inputStream, int maxAlbums) throws IOException {
+        List<Album> albums = new ArrayList<>();
+        int processedLines = 0;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        // Skip the header row.
+        reader.readLine();
+
+        while ((line = reader.readLine()) != null && albums.size() < maxAlbums) {
+            processLineDiscoGS(line, albums);
+            processedLines++;
+
+            if (processedLines % 10000 == 0) { //Limit for now until further optimization.
+                //System.out.println(processedLines + " linea prozetatutak.");
+                //System.out.println(albums.get(albums.size() - 1).toString());
+                System.out.println("Album guztiak: " + albums.size());
+            }
+        }
+        reader.close();
+        System.out.println("Albumes guztiak: " + albums.size());
+        System.out.println("Linea guztiak: " + processedLines);
+        return albums;
+    }
+
+    /**
+     * Loads albums from the provided CSV InputStream.
+     * @param inputStream the input stream of the CSV file.
      * @return list of Album objects.
      * @throws IOException if an I/O error occurs.
      */
