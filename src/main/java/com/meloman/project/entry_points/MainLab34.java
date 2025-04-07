@@ -15,13 +15,13 @@ public class MainLab34 {
     public static void main(String[] args) throws IOException {
         List<Playlist> playlists = new ArrayList<>();
 
-        int num_of_slices = 10;
+        int num_of_slices = 100;
 
         for (int j = 0; j < num_of_slices; j++) {
             try {
                 SpotifyPlaylistLoader loaderPlaylists = new SpotifyPlaylistLoader();
 
-                String file = "mpd.slice." + 1000 * j + "-" + ((1000 * (j + 1)) - 1) + ".json";
+                String file = "spotify/mpd.slice." + 1000 * j + "-" + ((1000 * (j + 1)) - 1) + ".json";
 
                 InputStream inputStreamPlaylists = SpotifyPlaylistLoader.class.getClassLoader()
                         .getResourceAsStream(file);
@@ -30,7 +30,7 @@ public class MainLab34 {
                     throw new IOException("File not found." + file);
                 }
 
-                playlists = loaderPlaylists.loadPlaylists(inputStreamPlaylists);
+                playlists.addAll(loaderPlaylists.loadPlaylists(inputStreamPlaylists));
                 System.out.println(playlists.size() + " playlists loaded");
 
                 // Print details of first few playlists if available
@@ -52,13 +52,13 @@ public class MainLab34 {
         DiscoGSLoader loaderAlbums = new DiscoGSLoader();
 
         InputStream inputStreamAlbums = SpotifyPlaylistLoader.class.getClassLoader()
-                .getResourceAsStream("DiscoGSdata.csv");
+                .getResourceAsStream("DiscoGSdata.cleaned.csv");
 
         if (inputStreamAlbums == null) {
-            throw new IOException("File not found: DiscoGSdata.csv");
+            throw new IOException("File not found: DiscoGSdata.cleaned.csv");
         }
 
-        List<Album> albums = loaderAlbums.loadAlbums(inputStreamAlbums, 1500000);
+        List<Album> albums = loaderAlbums.loadAlbums(inputStreamAlbums);
         System.out.println(albums.size() + " albums loaded");
 
 
