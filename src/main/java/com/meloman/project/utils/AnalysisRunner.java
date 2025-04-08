@@ -88,6 +88,7 @@ public class AnalysisRunner {
     /**
      * Performs parallel-threaded analysis on the provided data a couple of times.
      * Also logs time spent on completion
+     * @param numOfThreads Specifying number of threads
      */
     public void parallelThreadAnalysis(int numOfThreads) {
         System.out.println("Starting parallel-threaded analysis " + TIMES + " times. " + numOfThreads + " Threads.");
