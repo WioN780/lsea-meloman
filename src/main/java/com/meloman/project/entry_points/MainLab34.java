@@ -15,7 +15,7 @@ public class MainLab34 {
     public static void main(String[] args) throws IOException {
         List<Playlist> playlists = new ArrayList<>();
 
-        int num_of_slices = 300;
+        int num_of_slices = 100;
 
         SpotifyPlaylistLoader loaderPlaylists = new SpotifyPlaylistLoader();
 
@@ -55,6 +55,8 @@ public class MainLab34 {
         AnalysisRunner ar = new AnalysisRunner(albums, playlists);
 
         ar.singleThreadAnalysis();
-        ar.parallelThreadAnalysis();
+        ar.parallelThreadAnalysis(2);
+        ar.parallelThreadAnalysis(3);
+        ar.parallelThreadAnalysis(4);
     }
 }
