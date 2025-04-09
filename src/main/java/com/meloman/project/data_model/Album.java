@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -38,6 +39,11 @@ public class Album extends MediaItem {
     public Album(String id, String title, int year, Set<String> genres, Set<String> styles, Artist artist, Label label, List<Track> tracks) {
         super(id, title, year, genres, styles, artist, label);
         this.tracks = tracks;
+    }
+
+    public Album(String id, String title, Artist artist, Label label) {
+        super(id, title, artist, label);
+        this.tracks = new ArrayList<Track>();
     }
 
     /**
@@ -92,4 +98,5 @@ public class Album extends MediaItem {
                 ", year=" + getYear() + ", genres=" + getGenres() + ", styles=" + getStyles() +
                 ", tracks:\n" + trackList + "]";
     }
+    
 }

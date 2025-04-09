@@ -40,6 +40,17 @@
                             <mainClass>com.meloman.project.entry_points.TestMain</mainClass>
                         </configuration>
                     </execution>
+
+                    <!-- Execution from the test entry points (lab3/4) -->
+                    <execution>
+                        <id>run-demo-lab34</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.meloman.project.entry_points.MainLab34</mainClass>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
@@ -58,6 +69,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>6.2.34.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
         </dependency>
 
     </dependencies>
