@@ -23,6 +23,4 @@ public class Response implements Serializable {
         this.payload = payload;
         this.errorMessage = errorMessage;
     }
-
-    // Getters and setters
 }
