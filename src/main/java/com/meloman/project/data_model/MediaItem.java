@@ -3,6 +3,7 @@ package com.meloman.project.data_model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +16,12 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public abstract class MediaItem implements Cloneable, Comparable<MediaItem> {
+public abstract class MediaItem implements Serializable, Cloneable, Comparable<MediaItem> {
+
+    /**
+     * Unique identifier for the version of serialised item.
+     */
+    private static final long serialVersionUID = 1L;
 
     /** Unique identifier for the media item. */
     protected String id;

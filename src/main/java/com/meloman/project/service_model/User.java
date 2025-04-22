@@ -4,6 +4,7 @@ import com.meloman.project.data_model.MediaItem;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +18,12 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class User<ID> implements Cloneable {
+public class User<ID> implements Serializable, Cloneable {
+
+    /**
+     * Unique identifier for the version of serialised item.
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * Unique user identifier
@@ -78,6 +84,26 @@ public class User<ID> implements Cloneable {
      */
     public void likeItem(MediaItem item) {
         this.likedItems.add(item);
+    }
+
+    /**
+     * Removes a media item to the list of items owned by the user.
+     *
+     * @return boolean True value successful
+     * @param item the media item to remove
+     */
+    public boolean removeOwnedItem(MediaItem item) {
+        return item != null && ownedItems.remove(item);
+    }
+
+    /**
+     * Removes a media item to the set of items liked by the user.
+     *
+     * @return boolean True value successful
+     * @param item the media item to remove
+     */
+    public boolean removeLikedItem(MediaItem item) {
+        return item != null && likedItems.remove(item);
     }
 
     /**
