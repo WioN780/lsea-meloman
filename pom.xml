@@ -21,12 +21,12 @@
 
                     <!-- Execution from the main entry point -->
                     <execution>
-                        <id>run-main</id>
+                        <id>run-serialise-check</id>
                         <goals>
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.meloman.project.entry_points.Main</mainClass>
+                            <mainClass>com.meloman.project.entry_points.MainSerializeCheck</mainClass>
                         </configuration>
                     </execution>
 
