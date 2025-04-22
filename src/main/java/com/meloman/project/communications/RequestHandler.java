@@ -4,6 +4,8 @@ package com.meloman.project.communications;
  * Handles different types of server requests.
  */
 
+import com.meloman.project.service_model.User;
+
 public class RequestHandler {
     /**
      * Processes incoming message delivery requests
