@@ -1,5 +1,7 @@
 package com.meloman.project.communications;
 
+import com.meloman.project.service_model.User;
+
 import lombok.Getter;
 import lombok.Setter;
 
