@@ -17,5 +17,7 @@ public enum RequestType {
     //Get 10 random albums from library
     GET_10_RANDOM_ALBUMS,
     //Get 10 random playlists from library
-    GET_10_RANDOM_PLAYLISTS
+    GET_10_RANDOM_PLAYLISTS,
+
+    NONE;
 }

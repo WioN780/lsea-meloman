@@ -1,54 +1,51 @@
 package com.meloman.project.communications;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.lang.model.type.NullType;
+import lombok.*;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.HashMap;
-
-/**
- * Represents a client's request to the server.
- * Contains the request type and parameters.
- */
+import java.util.Map;
+import java.util.UUID;
 
 @Getter
-@Setter
-
+@ToString
+@AllArgsConstructor
+@Builder
 public class Request implements Serializable {
-    private RequestType type;
-    private String payload;
-    private Map<String, Object> params;
 
-    public Request() {
-        this.params = new HashMap<>();
+    private static final long serialVersionUID = 1L;   // ⇠ good practice
+
+    /** Mandatory client signature */
+    private final UUID userId;
+
+    /** The kind of action that is requested */
+    private final RequestType type;
+
+    /** Primary data for the request (can be null) */
+    private final Serializable payload;
+
+    /** Arbitrary extra parameters */
+    @Builder.Default
+    private final Map<String, Serializable> params = new HashMap<>();
+
+    /** Alternate constructor when you have no extra params. */
+    public Request(UUID userId, RequestType type) {
+        this(userId, type, null, new HashMap<>());
     }
 
-    public Request(RequestType type) {
-        this.type = type;
-        this.params = new HashMap<>();
+    /** Alternate constructor when you have no extra params. */
+    public Request(UUID userId, RequestType type, Serializable payload) {
+        this(userId, type, payload, new HashMap<>());
     }
 
-    public void addParam(String key, Object value) {
+    /** Add / replace a parameter fluently */
+    public Request withParam(String key, Serializable value) {
         params.put(key, value);
+        return this;
     }
 
-    public Object getParam(String key) {
-        return params.get(key);
-    }
-
-    public static Request fromString(String rawData) {
-        Request request = new Request();
-        try {
-            String[] parts = rawData.split(":", 2);
-            request.setType(RequestType.valueOf(parts[0].toUpperCase()));
-            if (parts.length > 1) {
-                request.setPayload(parts[1]);
-            }
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid request type: " + rawData);
-        }
-        return request;
+    /** Typed accessor */
+    @SuppressWarnings("unchecked")
+    public <T extends Serializable> T getParam(String key, Class<T> klass) {
+        return (T) params.get(key);
     }
 }

@@ -5,10 +5,10 @@ import com.meloman.project.service_model.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -22,107 +22,65 @@ import java.util.concurrent.CountDownLatch;
 
 public class Client {
     private User currentUser;
-    private String serverAddress;
-    private int serverPort;
-    private CountDownLatch responseLatch;
-    private boolean lastRequestSuccessful;
-    private String lastResponse;
+    //private String serverAddress;
+
+    private int serverPortTCP;
+    private int serverPortUDP;
 
     /**
-     * Initializes connection to messaging server
-     * @param serverAddress IP/hostname of server
-     * @param port Server port number
+     * Initializes client
      */
-    public void connect(String serverAddress, int port) {
-        this.serverAddress = serverAddress;
-        this.serverPort = port;
+    public Client(int portTCP, int portUDP, User newUser) {
+        // this.serverAddress = serverAddress;
+        this.serverPortTCP = portTCP;
+        this.serverPortUDP = portUDP;
+        this.currentUser = newUser;
     }
 
-    /**
-     * Sends message to another user through server
-     * @param recipientId Target user ID
-     * @param messageContent Text content to send
-     */
-    public void sendMessage(String recipientId, String messageContent) {
-        //TODO: Implement message packaging and sending
-    }
+    public Response sendRequestTCP(Request request)
+            throws IOException, ClassNotFoundException {
 
-    /**
-     * Updates user's active status on server
-     * @param isActive New status value
-     */
-    public void updateActivityStatus(boolean isActive) {
-        //TODO: Implement status update transmission
-    }
+        try (Socket socket = new Socket("localhost", serverPortTCP);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in  = new ObjectInputStream(socket.getInputStream())) {
 
-    /**
-     * Fetches current user list from server
-     * @return List of available users with basic info
-     */
-    public List<User> requestUserList() {
-        //TODO: Implement user list request/response handling
-        return null;
-    }
+            out.writeObject(request);
+            out.flush();
 
-    /**
-     * Sets up a latch for testing
-     * @param latch CountDownLatch for tracking responses
-     */
-    public void setResponseLatch(CountDownLatch latch) {
-        this.responseLatch = latch;
-    }
-
-    /**
-     * Requests random albums from server
-     * @return true if request was successful, false otherwise
-     */
-    public boolean requestRandomAlbums() {
-        return sendRequest(RequestType.GET_10_RANDOM_ALBUMS);
-    }
-
-    /**
-     * Requests random playlists from server
-     * @return true if request was successful, false otherwise
-     */
-    public boolean requestRandomPlaylists() {
-        return sendRequest(RequestType.GET_10_RANDOM_PLAYLISTS);
-    }
-
-    /**
-     * Sends a request to the server and handles the response
-     * @param requestType The type of request to send
-     * @return true if the request was successful, false otherwise
-     */
-    private boolean sendRequest(RequestType requestType) {
-        try (Socket socket = new Socket(serverAddress, serverPort);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-
-            // Create and send request
-            String requestString = requestType.toString();
-            System.out.println("Sending request: " + requestString);
-            out.println(requestString);
-
-            // Wait for and process response
-            String responseStr = in.readLine();
-            System.out.println("Received response: " + responseStr);
-
-            // Store response for inspection
-            this.lastResponse = responseStr;
-
-            // Check if response indicates success
-            this.lastRequestSuccessful = responseStr != null && !responseStr.contains("false");
-
-            // Signal that we received a response (for testing)
-            if (responseLatch != null) {
-                responseLatch.countDown();
-            }
-
-            return this.lastRequestSuccessful;
-
-        } catch (IOException e) {
-            System.err.println("Error sending request: " + e.getMessage());
-            return false;
+            return (Response) in.readObject();
         }
     }
+
+    public Response sendRequestUDP(Request request)
+            throws IOException, ClassNotFoundException {
+
+        DatagramSocket socket = new DatagramSocket();
+        socket.setSoTimeout(2500);
+
+        // Serialize request to byte array
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
+        objOut.writeObject(request);
+        objOut.flush();
+        byte[] requestBytes = byteOut.toByteArray();
+
+        // Send the request to the server
+        InetAddress serverAddress = InetAddress.getByName("localhost");
+        DatagramPacket requestPacket = new DatagramPacket(requestBytes, requestBytes.length, serverAddress, serverPortUDP);
+        socket.send(requestPacket);
+
+        // Prepare to receive the response
+        byte[] buffer = new byte[65535]; // Max UDP size
+        DatagramPacket responsePacket = new DatagramPacket(buffer, buffer.length);
+        socket.receive(responsePacket); // Blocking call
+
+        // Deserialize response
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(responsePacket.getData(), 0, responsePacket.getLength());
+        ObjectInputStream objIn = new ObjectInputStream(byteIn);
+        Response response = (Response) objIn.readObject();
+
+        socket.close();
+        return response;
+    }
+
 }

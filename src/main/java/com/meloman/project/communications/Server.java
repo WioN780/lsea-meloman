@@ -64,7 +64,7 @@ public class Server {
             // Load albums with DiscoGSLoader (limit to 1000 for performance)
             DiscoGSLoader albumLoader = new DiscoGSLoader();
             InputStream albumStream = SpotifyPlaylistLoader.class.getClassLoader()
-                    .getResourceAsStream("com/meloman/project/data/DiscoGSdata.csv");
+                    .getResourceAsStream("DiscoGSdata.cleaned.csv");
             if (albumStream != null) {
                 this.availableAlbums = albumLoader.loadAlbums(albumStream, 1000);
             } else {
@@ -74,7 +74,7 @@ public class Server {
             // Load playlists with SpotifyPlaylistLoader
             SpotifyPlaylistLoader playlistLoader = new SpotifyPlaylistLoader();
             InputStream playlistStream = SpotifyPlaylistLoader.class.getClassLoader()
-                    .getResourceAsStream("com/meloman/project/data/mpd.slice.0-999.json");
+                    .getResourceAsStream("spotify/mpd.slice.0-999.json");
             if (playlistStream != null) {
                 this.availablePlaylists = playlistLoader.loadPlaylists(playlistStream);
             } else {
@@ -90,131 +90,92 @@ public class Server {
      * Starts listening for incoming client connections (UDP)
      */
     public void startUDPListener() {
-        // UDP
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try (DatagramSocket socket = new DatagramSocket(portUDP)) {
-                    byte[] buf = new byte[socket.getReceiveBufferSize()];
-                    DatagramPacket packet = new DatagramPacket(buf, buf.length);
+        new Thread(() -> {
+            try (DatagramSocket socket = new DatagramSocket(portUDP)) {
+                System.out.println("Listening on UDP port " + portUDP + " …");
 
-                    System.out.println("Listening on UDP port " + portUDP + ", Say hi!");
-                    while (true) {
-                        socket.receive(packet);
-                        // TODO make up where to implement UDP
-                    }
-                } catch (IOException ioe) {
-                    System.err.println("Cannot open the port on UDP");
-                    ioe.printStackTrace();
-                } finally {
-                    System.out.println("Closing UDP server");
+                byte[] buffer = new byte[65535];
+
+                while (true) {
+                    DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                    socket.receive(packet);
+
+                    // Deserialize the request
+                    ByteArrayInputStream byteIn = new ByteArrayInputStream(packet.getData(), 0, packet.getLength());
+                    ObjectInputStream objIn = new ObjectInputStream(byteIn);
+                    Request req = (Request) objIn.readObject();
+
+                    // Handle the request
+                    Response resp = requestHandler.handle(req);
+
+                    // Serialize the response
+                    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+                    ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
+                    objOut.writeObject(resp);
+                    objOut.flush();
+                    byte[] responseBytes = byteOut.toByteArray();
+
+                    // Send the response
+                    DatagramPacket responsePacket = new DatagramPacket(
+                            responseBytes, responseBytes.length,
+                            packet.getAddress(), packet.getPort()
+                    );
+                    socket.send(responsePacket);
                 }
+
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }).start();
     }
+
 
     /**
      * Starts listening for incoming client connections (TCP)
      */
     public void startTCPListener() {
-        // TCP
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ExecutorService executor = null;
-                try (ServerSocket server = new ServerSocket(portTCP)) {
-                    executor = Executors.newFixedThreadPool(5);
-                    System.out.println("Listening on TCP port " + portTCP + ", Say hi!");
-                    while (true) {
-                        final Socket socket = server.accept();
-                        executor.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                String inputLine = "";
-                                System.err.println(
-                                        socket.toString() + " ~> connected");
-                                try (PrintWriter out = new PrintWriter(
-                                        socket.getOutputStream(), true);
-                                     BufferedReader in = new BufferedReader(
-                                             new InputStreamReader(socket
-                                                     .getInputStream()))) {
-                                    while ((inputLine = in.readLine()) != null && !inputLine.equals("!quit")) {
-                                        System.out.println(socket.toString() + ": " + inputLine);
 
-                                        // Convert input to request
-                                        Request request = Request.fromString(inputLine);
+        new Thread(() -> {
+            ExecutorService pool = null;
 
-                                        // Handle the request
-                                        Response response = handleRequest(request);
+            try (ServerSocket server = new ServerSocket(portTCP)) {
+                System.out.println("Listening on TCP port " + portTCP + " …");
 
-                                        // Send response back to client
-                                        if (response != null) {
-                                            out.println(response);
-                                        }
-                                    }
-                                } catch (IOException ioe) {
-                                    ioe.printStackTrace();
-                                } finally {
-                                    try {
-                                        System.err.println(socket.toString()
-                                                + " ~> closing");
-                                        socket.close();
-                                    } catch (IOException ioe) {
-                                        ioe.printStackTrace();
-                                    }
-                                }
-                            }
-                        });
-                    }
-                } catch (IOException ioe) {
-                    System.err.println("Cannot open the port on TCP");
-                    ioe.printStackTrace();
-                } finally {
-                    System.out.println("Closing TCP server");
-                    if (executor != null) {
-                        executor.shutdown();
-                    }
+                while (true) {
+                    final Socket socket = server.accept();
+                    handleClientTCP(socket);
                 }
+
+            } catch (IOException ioe) {
+                System.err.println("Cannot open TCP port " + portTCP);
+                ioe.printStackTrace();
+            } finally {
+                System.out.println("TCP listener stopped");
             }
         }).start();
     }
 
-    /**
-     * Handles incoming client requests and routes them to appropriate handlers
-     * @param request Received request object
-     * @return Response object to be sent back to client
-     */
-    public Response handleRequest(Request request) {
-        if (request == null) {
-            return new Response(false, null, "Invalid request");
+    private void handleClientTCP(Socket socket) {
+        System.out.println(socket + "  -  connected");
+
+        try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream  in  = new ObjectInputStream(socket.getInputStream())) {
+
+            while (true) {
+                Object o = in.readObject();
+                if (!(o instanceof Request req)) break;
+
+                Response resp = requestHandler.handle(req);
+                out.writeObject(resp);
+                out.flush();
+            }
+        } catch (EOFException eof) {
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } finally {
+            try { socket.close(); } catch (IOException ignore) {}
+            System.out.println(socket + "  ⇢  closed");
         }
-
-        switch (request.getType()) {
-            case GET_10_RANDOM_ALBUMS:
-                return requestHandler.handleRandomAlbumsRequest();
-            case GET_10_RANDOM_PLAYLISTS:
-                return requestHandler.handleRandomPlaylistsRequest();
-            // Handle other request types
-            default:
-                return new Response(false, null, "Unsupported request type: " + request.getType());
-        }
-    }
-
-    /**
-     * Maintains list of currently connected users
-     * @param user User to add/update in the list
-     */
-    public void updateUserStatus(User user) {
-        //TODO: Add/update user in connectedUsers list
-    }
-
-    /**
-     * Broadcasts message status updates to relevant clients
-     * @param messageId ID of message to update
-     * @param recipientId Target user for status update
-     */
-    public void broadcastMessageStatus(String messageId, String recipientId) {
-        //TODO: Implement status propagation logic
     }
 
     /**
@@ -223,8 +184,8 @@ public class Server {
      * @param count Number of items to select
      * @return List of randomly selected items
      */
-    public <T> List<T> getRandomItems(List<T> items, int count) {
-        List<T> result = new ArrayList<>();
+    public <T> ArrayList<T> getRandomItems(List<T> items, int count) {
+        ArrayList<T> result = new ArrayList<>();
         int size = items.size();
 
         if (size <= 0) {
