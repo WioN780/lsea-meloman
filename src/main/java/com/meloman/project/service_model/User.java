@@ -4,6 +4,7 @@ import com.meloman.project.data_model.MediaItem;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +18,12 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class User<ID> implements Cloneable {
+public class User<ID> implements Serializable, Cloneable {
+
+    /**
+     * Unique identifier for the version of serialised item.
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * Unique user identifier
@@ -38,11 +44,11 @@ public class User<ID> implements Cloneable {
     /**
      * Abstract list of any owned Media Items
      */
-    private List<MediaItem> ownedItems;
+    private ArrayList<MediaItem> ownedItems;
     /**
      * Abstract set of any liked Media Items
      */
-    private Set<MediaItem> likedItems;
+    private HashSet<MediaItem> likedItems;
 
     /**
      * Constructs a new User instance with the provided user ID, username, email, and phone number.
@@ -81,6 +87,26 @@ public class User<ID> implements Cloneable {
     }
 
     /**
+     * Removes a media item to the list of items owned by the user.
+     *
+     * @return boolean True value successful
+     * @param item the media item to remove
+     */
+    public boolean removeOwnedItem(MediaItem item) {
+        return item != null && ownedItems.remove(item);
+    }
+
+    /**
+     * Removes a media item to the set of items liked by the user.
+     *
+     * @return boolean True value successful
+     * @param item the media item to remove
+     */
+    public boolean removeLikedItem(MediaItem item) {
+        return item != null && likedItems.remove(item);
+    }
+
+    /**
      * Creates and returns a deep copy of this user.
      * Both the owned and liked media item collections are cloned,
      * along with their contents.
@@ -93,13 +119,13 @@ public class User<ID> implements Cloneable {
         try {
             User<ID> cloned = (User<ID>) super.clone();
 
-            List<MediaItem> clonedOwnedItems = new ArrayList<>();
+            ArrayList<MediaItem> clonedOwnedItems = new ArrayList<>();
             for (MediaItem mi : this.ownedItems) {
                 clonedOwnedItems.add(mi.clone());
             }
             cloned.setOwnedItems(clonedOwnedItems);
 
-            Set<MediaItem> clonedLikedItems = new HashSet<>();
+            HashSet<MediaItem> clonedLikedItems = new HashSet<>();
             for (MediaItem mi : this.likedItems) {
                 clonedLikedItems.add(mi.clone());
             }
