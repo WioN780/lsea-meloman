@@ -44,11 +44,11 @@ public class User<ID> implements Serializable, Cloneable {
     /**
      * Abstract list of any owned Media Items
      */
-    private List<MediaItem> ownedItems;
+    private ArrayList<MediaItem> ownedItems;
     /**
      * Abstract set of any liked Media Items
      */
-    private Set<MediaItem> likedItems;
+    private HashSet<MediaItem> likedItems;
 
     /**
      * Constructs a new User instance with the provided user ID, username, email, and phone number.
@@ -119,13 +119,13 @@ public class User<ID> implements Serializable, Cloneable {
         try {
             User<ID> cloned = (User<ID>) super.clone();
 
-            List<MediaItem> clonedOwnedItems = new ArrayList<>();
+            ArrayList<MediaItem> clonedOwnedItems = new ArrayList<>();
             for (MediaItem mi : this.ownedItems) {
                 clonedOwnedItems.add(mi.clone());
             }
             cloned.setOwnedItems(clonedOwnedItems);
 
-            Set<MediaItem> clonedLikedItems = new HashSet<>();
+            HashSet<MediaItem> clonedLikedItems = new HashSet<>();
             for (MediaItem mi : this.likedItems) {
                 clonedLikedItems.add(mi.clone());
             }
