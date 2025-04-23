@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
 @Getter
 @Setter
 public class Server {
-    private List<User> connectedUsers;
+    private ArrayList<User> connectedUsers;
     private List<Album> availableAlbums;
     private List<Playlist> availablePlaylists;
     private RequestHandler requestHandler;
