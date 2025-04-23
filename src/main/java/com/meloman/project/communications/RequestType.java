@@ -13,5 +13,9 @@ public enum RequestType {
     //Add an item to a user's liked list
     ADD_USER_LIKED_ITEM,
     //Retrieve the highest-rated item
-    GET_TOP_RATED_ITEM
+    GET_TOP_RATED_ITEM,
+    //Get 10 random albums from library
+    GET_10_RANDOM_ALBUMS,
+    //Get 10 random playlists from library
+    GET_10_RANDOM_PLAYLISTS
 }

@@ -31,6 +31,7 @@ public class Server {
     private List<User> connectedUsers;
     private List<Album> availableAlbums;
     private List<Playlist> availablePlaylists;
+    private RequestHandler requestHandler;
 
     private final static int portUDP = 10555;
     private final static int portTCP = 10556;
@@ -40,6 +41,9 @@ public class Server {
         this.connectedUsers = new ArrayList<>();
         this.availableAlbums = new ArrayList<>();
         this.availablePlaylists = new ArrayList<>();
+
+        // Initialize request handler
+        this.requestHandler = new RequestHandler(this);
 
         // Load data using utility classes
         loadData();
@@ -85,7 +89,6 @@ public class Server {
     /**
      * Starts listening for incoming client connections (UDP)
      */
-
     public void startUDPListener() {
         // UDP
         new Thread(new Runnable() {
@@ -142,9 +145,12 @@ public class Server {
                                         Request request = Request.fromString(inputLine);
 
                                         // Handle the request
-                                        handleRequest(request);
+                                        Response response = handleRequest(request);
 
-                                        // out.println("ACK: " + request.getType());
+                                        // Send response back to client
+                                        if (response != null) {
+                                            out.println(response);
+                                        }
                                     }
                                 } catch (IOException ioe) {
                                     ioe.printStackTrace();
@@ -176,10 +182,22 @@ public class Server {
     /**
      * Handles incoming client requests and routes them to appropriate handlers
      * @param request Received request object
+     * @return Response object to be sent back to client
      */
-    private void handleRequest(Request request) {
-        //TODO: Implement request type distinction
-        //Should call specific handlers based on request type
+    public Response handleRequest(Request request) {
+        if (request == null) {
+            return new Response(false, null, "Invalid request");
+        }
+
+        switch (request.getType()) {
+            case GET_10_RANDOM_ALBUMS:
+                return requestHandler.handleRandomAlbumsRequest();
+            case GET_10_RANDOM_PLAYLISTS:
+                return requestHandler.handleRandomPlaylistsRequest();
+            // Handle other request types
+            default:
+                return new Response(false, null, "Unsupported request type: " + request.getType());
+        }
     }
 
     /**
@@ -200,72 +218,18 @@ public class Server {
     }
 
     /**
-     * Sending a list of 10 random playlists to the client
-     * @param port of the receiver
-     */
-    public void sendRandomPlaylists(int port) {
-        try (Socket socket = new Socket("localhost", port);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
-
-            // Check if playlists are available
-            if (availablePlaylists == null || availablePlaylists.isEmpty()) {
-                Response response = new Response(false, null, "No playlists available");
-                out.println(response);
-                return;
-            }
-
-            // Select up to 10 random playlists
-            List<Playlist> randomPlaylists = getRandomItems(availablePlaylists, 10);
-
-            // Create and send response
-            Response response = new Response(true, randomPlaylists, null);
-            out.println(response);
-            System.out.println("Sent " + randomPlaylists.size() + " playlists to port " + port);
-
-        } catch (IOException e) {
-            System.err.println("Error sending playlists to port " + port + ": " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Sending a list of 10 random albums to the client
-     * @param port of the receiver
-     */
-    public void sendRandomAlbums(int port) {
-        try (Socket socket = new Socket("localhost", port);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
-
-            // Check if albums are available
-            if (availableAlbums == null || availableAlbums.isEmpty()) {
-                Response response = new Response(false, null, "No albums available");
-                out.println(response);
-                return;
-            }
-
-            // Select up to 10 random albums
-            List<Album> randomAlbums = getRandomItems(availableAlbums, 10);
-
-            // Create and send response
-            Response response = new Response(true, randomAlbums, null);
-            out.println(response);
-            System.out.println("Sent " + randomAlbums.size() + " albums to port " + port);
-
-        } catch (IOException e) {
-            System.err.println("Error sending albums to port " + port + ": " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Helper method to select n random items from a list
      * @param items Source list to select from
      * @param count Number of items to select
      * @return List of randomly selected items
      */
-    private <T> List<T> getRandomItems(List<T> items, int count) {
+    public <T> List<T> getRandomItems(List<T> items, int count) {
         List<T> result = new ArrayList<>();
         int size = items.size();
+
+        if (size <= 0) {
+            return result; // Return empty list if no items
+        }
 
         if (size <= count) {
             return new ArrayList<>(items); // Return all items if fewer than requested
@@ -284,5 +248,13 @@ public class Server {
         }
 
         return result;
+    }
+
+    public int getPortTCP() {
+        return portTCP;
+    }
+
+    public int getPortUDP() {
+        return portUDP;
     }
 }
