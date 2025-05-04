@@ -1,4 +1,4 @@
-package repositories;
+package com.meloman.project.repositories;
 
 import com.meloman.project.transaction_model.Artist;
 

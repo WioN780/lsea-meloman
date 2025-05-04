@@ -1,4 +1,4 @@
-package repositories;
+package com.meloman.project.repositories;
 
 import com.meloman.project.database_model.Label;
 
