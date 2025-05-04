@@ -14,7 +14,7 @@ public class Label implements Serializable {
 
     @Id
     @Column(length = 50)
-    private long id;
+    private String id;
 
     @Column(name = "name", length = 255)
     private String name;
@@ -31,14 +31,14 @@ public class Label implements Serializable {
 
     public Label(){ }
 
-    public Label(long id, String name, String contactInfo, String url) {
+    public Label(String id, String name, String contactInfo, String url) {
         this.id = id;
         this.name = name;
         this.contactInfo = contactInfo;
         this.url = url;
     }
 
-    public Label(long id, String name, Label parentLabel, String contactInfo, String url) {
+    public Label(String id, String name, Label parentLabel, String contactInfo, String url) {
         this.id = id;
         this.name = name;
         this.parentLabel = parentLabel;

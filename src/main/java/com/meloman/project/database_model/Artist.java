@@ -18,7 +18,7 @@ public class Artist implements Serializable {
 
     @Id
     @Column(length = 50)
-    private long id;
+    private String id;
 
     @Column(name = "name", length = 255)
     private String name;
@@ -34,7 +34,7 @@ public class Artist implements Serializable {
 
     public Artist(){ }
 
-    public Artist(long id, String name, String realName, String contactInfo, String url) {
+    public Artist(String id, String name, String realName, String contactInfo, String url) {
         this.id = id;
         this.name = name;
         this.realName = realName;

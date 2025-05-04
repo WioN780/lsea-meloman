@@ -17,14 +17,14 @@ public class Genre implements Serializable {
 
     @Id
     @Column(length = 50)
-    private long id;
+    private String id;
 
     @Column(name = "name", length = 255)
     private String name;
 
     public Genre(){ }
 
-    public Genre(long id, String name) {
+    public Genre(String id, String name) {
         this.id = id;
         this.name = name;
     }

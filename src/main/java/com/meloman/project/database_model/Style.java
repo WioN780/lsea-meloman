@@ -17,14 +17,14 @@ public class Style implements Serializable {
 
     @Id
     @Column(length = 50)
-    private long id;
+    private String id;
 
     @Column(name = "name", length = 255)
     private String name;
 
     public Style(){ }
 
-    public Style(long id, String name) {
+    public Style(String id, String name) {
         this.id = id;
         this.name = name;
     }
