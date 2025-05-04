@@ -1,13 +1,11 @@
 package com.meloman.project.communications;
 
-import com.meloman.project.data_model.Album;
-import com.meloman.project.data_model.MediaItem;
-import com.meloman.project.data_model.Playlist;
+import com.meloman.project.transaction_model.Album;
+import com.meloman.project.transaction_model.MediaItem;
+import com.meloman.project.transaction_model.Playlist;
 import com.meloman.project.service_model.User;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 
 public class RequestHandler {

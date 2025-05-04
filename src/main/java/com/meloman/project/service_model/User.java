@@ -1,14 +1,12 @@
 package com.meloman.project.service_model;
 
-import com.meloman.project.data_model.MediaItem;
+import com.meloman.project.transaction_model.MediaItem;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Class representing potential user of the application

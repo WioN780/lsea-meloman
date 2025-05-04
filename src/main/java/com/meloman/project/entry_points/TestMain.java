@@ -1,6 +1,6 @@
 package com.meloman.project.entry_points;
 
-import com.meloman.project.data_model.*;
+import com.meloman.project.transaction_model.*;
 
 import java.util.*;
 

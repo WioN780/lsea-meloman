@@ -1,7 +1,7 @@
 package com.meloman.project.entry_points;
 
-import com.meloman.project.data_model.Album;
-import com.meloman.project.data_model.Playlist;
+import com.meloman.project.transaction_model.Album;
+import com.meloman.project.transaction_model.Playlist;
 import com.meloman.project.utils.AnalysisRunner;
 import com.meloman.project.utils.DiscoGSLoader;
 import com.meloman.project.utils.SpotifyPlaylistLoader;
