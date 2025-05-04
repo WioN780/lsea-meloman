@@ -1,7 +1,7 @@
 package com.meloman.project.communications;
 
-import com.meloman.project.data_model.Album;
-import com.meloman.project.data_model.Playlist;
+import com.meloman.project.transaction_model.Album;
+import com.meloman.project.transaction_model.Playlist;
 import com.meloman.project.utils.DiscoGSLoader;
 import com.meloman.project.utils.SpotifyPlaylistLoader;
 import com.meloman.project.service_model.User;
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /*
  * Server-side class managing user connections and message routing

@@ -1,4 +1,4 @@
-package com.meloman.project.data_model;
+package com.meloman.project.transaction_model;
 
 import lombok.Getter;
 import lombok.Setter;

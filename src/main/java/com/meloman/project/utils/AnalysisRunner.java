@@ -1,8 +1,7 @@
 package com.meloman.project.utils;
 
-import com.meloman.project.data_model.Album;
-import com.meloman.project.data_model.Playlist;
-import com.meloman.project.data_model.Track;
+import com.meloman.project.transaction_model.Album;
+import com.meloman.project.transaction_model.Playlist;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
