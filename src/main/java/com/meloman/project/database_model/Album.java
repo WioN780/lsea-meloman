@@ -32,16 +32,16 @@ public class Album implements Serializable {
 
     @ManyToMany
     @JoinTable(
-            name = "track_genre",
-            joinColumns = @JoinColumn(name = "track_id"),
+            name = "album_genre",
+            joinColumns = @JoinColumn(name = "album_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     private Set<Genre> genres = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
-            name = "track_style",
-            joinColumns = @JoinColumn(name = "track_id"),
+            name = "album_style",
+            joinColumns = @JoinColumn(name = "album_id"),
             inverseJoinColumns = @JoinColumn(name = "style_id")
     )
     private Set<Style> styles = new HashSet<>();
