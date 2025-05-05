@@ -24,7 +24,7 @@ public class Track implements Serializable {
     @Column(name = "duration")
     private double duration;
 
-    @Column(name = "year")
+    @Column(name = "`year`")
     private int year;
 
     @ManyToMany
@@ -46,10 +46,10 @@ public class Track implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "artist_track",
-            joinColumns = @JoinColumn(name = "artist_id"),
-            inverseJoinColumns = @JoinColumn(name = "track_id")
+            joinColumns        = @JoinColumn(name = "track_id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id")
     )
-    private Set<Artist> artists = new HashSet<>();
+    private Set<Artist> artists;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "label_id", referencedColumnName = "id")

@@ -21,7 +21,7 @@ public class Album implements Serializable {
     @Column(name = "title", nullable = false, length = 255)
     private String title;
 
-    @Column(name = "year")
+    @Column(name = "`year`")
     private int year;
 
     @Column(name = "contact_info", length = 500)
