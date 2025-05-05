@@ -1,7 +1,7 @@
 package com.meloman.project.utils;
 
-import com.meloman.project.transaction_model.Album;
-import com.meloman.project.transaction_model.Playlist;
+import com.meloman.project.transaction_model.AlbumT;
+import com.meloman.project.transaction_model.PlaylistT;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -12,18 +12,18 @@ public class AnalysisRunner {
 
     private final static Integer TIMES = 10;
 
-    private List<Album> albums;
-    private List<Playlist> playlists;
+    private List<AlbumT> albumTS;
+    private List<PlaylistT> playlistTS;
 
     /**
      * Constructs an AnalysisRunner with the provided lists of albums and playlists.
      *
-     * @param albums the list of Album objects to analyze
-     * @param playlists the list of Playlist objects to analyze
+     * @param albumTS the list of Album objects to analyze
+     * @param playlistTS the list of Playlist objects to analyze
      */
-    public AnalysisRunner(List<Album> albums, List<Playlist> playlists) {
-        this.albums = albums;
-        this.playlists = playlists;
+    public AnalysisRunner(List<AlbumT> albumTS, List<PlaylistT> playlistTS) {
+        this.albumTS = albumTS;
+        this.playlistTS = playlistTS;
     }
 
     /**
@@ -42,8 +42,8 @@ public class AnalysisRunner {
             long start = System.currentTimeMillis();
 
             //map every track to its album
-            Map<String, Album> trackIdToAlbum = albums.stream().sequential()
-                    .flatMap(album -> album.getTracks().stream()
+            Map<String, AlbumT> trackIdToAlbum = albumTS.stream().sequential()
+                    .flatMap(album -> album.getTrackTS().stream()
                             .map(track -> new AbstractMap.SimpleEntry<>(track.getTitle(), album)))
                     .collect(Collectors.toMap(
                             Map.Entry::getKey,
@@ -52,9 +52,9 @@ public class AnalysisRunner {
                     ));
 
 
-            Map<Album, Integer> albumToCount = playlists.stream().sequential()
+            Map<AlbumT, Integer> albumToCount = playlistTS.stream().sequential()
                     // Flatten the playlists into a stream of tracks
-                    .flatMap(playlist -> playlist.getTracks().stream())
+                    .flatMap(playlist -> playlist.getTrackTS().stream())
                     // Filter out tracks that don't have an album
                     .filter(track -> trackIdToAlbum.get(track.getTitle()) != null)
                     // Group tracks by their album
@@ -65,7 +65,7 @@ public class AnalysisRunner {
                     ));
 
             //sorting by integer
-            List<Map.Entry<Album, Integer>> sortedAlbumCounts = albumToCount.entrySet()
+            List<Map.Entry<AlbumT, Integer>> sortedAlbumCounts = albumToCount.entrySet()
                     .stream().sequential()
                     .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                     .collect(Collectors.toList());
@@ -74,12 +74,12 @@ public class AnalysisRunner {
             long end = System.currentTimeMillis();
             System.out.println("Single-threaded analysis №" + (i + 1) + " completed in " + (end - start) + " ms.");
 
-            Map.Entry<Album, Integer> topEntry = sortedAlbumCounts.get(0);
-            Album topAlbum = topEntry.getKey();
+            Map.Entry<AlbumT, Integer> topEntry = sortedAlbumCounts.get(0);
+            AlbumT topAlbumT = topEntry.getKey();
             int topCount = topEntry.getValue();
 
             System.out.println("Most occurring album:");
-            System.out.println("Album: \"" + topAlbum.getTitle() + "\" by " + topAlbum.getArtist().getName());
+            System.out.println("Album: \"" + topAlbumT.getTitle() + "\" by " + topAlbumT.getArtistT().getName());
             System.out.println("Occurrences: " + topCount);
         }
     }
@@ -99,8 +99,8 @@ public class AnalysisRunner {
                     long start = System.currentTimeMillis();
 
                     //map every track to its album
-                    Map<String, Album> trackIdToAlbum = albums.stream().parallel()
-                            .flatMap(album -> album.getTracks().stream()
+                    Map<String, AlbumT> trackIdToAlbum = albumTS.stream().parallel()
+                            .flatMap(album -> album.getTrackTS().stream()
                                     .map(track -> new AbstractMap.SimpleEntry<>(track.getTitle(), album)))
                             .collect(Collectors.toMap(
                                     Map.Entry::getKey,
@@ -109,9 +109,9 @@ public class AnalysisRunner {
                             ));
 
 
-                    Map<Album, Integer> albumToCount = playlists.stream().parallel()
+                    Map<AlbumT, Integer> albumToCount = playlistTS.stream().parallel()
                             // Flatten the playlists into a stream of tracks
-                            .flatMap(playlist -> playlist.getTracks().stream())
+                            .flatMap(playlist -> playlist.getTrackTS().stream())
                             // Filter out tracks that don't have an album
                             .filter(track -> trackIdToAlbum.get(track.getTitle()) != null)
                             // Group tracks by their album
@@ -122,7 +122,7 @@ public class AnalysisRunner {
                             ));
 
                     //sorting by integer
-                    List<Map.Entry<Album, Integer>> sortedAlbumCounts = albumToCount.entrySet()
+                    List<Map.Entry<AlbumT, Integer>> sortedAlbumCounts = albumToCount.entrySet()
                             .stream().parallel()
                             .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                             .collect(Collectors.toList());
@@ -130,12 +130,12 @@ public class AnalysisRunner {
                     long end = System.currentTimeMillis();
                     System.out.println("Parallel analysis №" + (i + 1) + " completed in " + (end - start) + " ms.");
 
-                    Map.Entry<Album, Integer> topEntry = sortedAlbumCounts.get(0);
-                    Album topAlbum = topEntry.getKey();
+                    Map.Entry<AlbumT, Integer> topEntry = sortedAlbumCounts.get(0);
+                    AlbumT topAlbumT = topEntry.getKey();
                     int topCount = topEntry.getValue();
 
                     System.out.println("Most occurring album:");
-                    System.out.println("Album: \"" + topAlbum.getTitle() + "\" by " + topAlbum.getArtist().getName());
+                    System.out.println("Album: \"" + topAlbumT.getTitle() + "\" by " + topAlbumT.getArtistT().getName());
                     System.out.println("Occurrences: " + topCount);
                 }
             }).get(); // Wait for task to complete

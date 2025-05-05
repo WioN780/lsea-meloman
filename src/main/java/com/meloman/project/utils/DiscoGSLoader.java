@@ -1,9 +1,9 @@
 package com.meloman.project.utils;
 
-import com.meloman.project.transaction_model.Album;
-import com.meloman.project.transaction_model.Artist;
-import com.meloman.project.transaction_model.Label;
-import com.meloman.project.transaction_model.Track;
+import com.meloman.project.transaction_model.AlbumT;
+import com.meloman.project.transaction_model.ArtistT;
+import com.meloman.project.transaction_model.LabelT;
+import com.meloman.project.transaction_model.TrackT;
 
 import java.io.*;
 import java.util.*;
@@ -11,9 +11,9 @@ import java.util.*;
 public class DiscoGSLoader {
 
     // Maps to avoid duplicate creations.
-    private Map<String, Artist> artistMap = new HashMap<>();
-    private Map<String, Label> labelMap = new HashMap<>();
-    private Map<String, Album> albumMap = new HashMap<>();
+    private Map<String, ArtistT> artistMap = new HashMap<>();
+    private Map<String, LabelT> labelMap = new HashMap<>();
+    private Map<String, AlbumT> albumMap = new HashMap<>();
 
     // Define static constants for default values
     private static final String UNKNOWN_ARTIST = "Unknown Artist";
@@ -34,28 +34,28 @@ public class DiscoGSLoader {
      * @return list of Album objects.
      * @throws IOException if an I/O error occurs.
      */
-    public List<Album> loadAlbums(InputStream inputStream, int maxAlbums) throws IOException {
-        List<Album> albums = new ArrayList<>();
+    public List<AlbumT> loadAlbums(InputStream inputStream, int maxAlbums) throws IOException {
+        List<AlbumT> albumTS = new ArrayList<>();
         int processedLines = 0;
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
         // Skip the header row.
         reader.readLine();
 
-        while ((line = reader.readLine()) != null && albums.size() < maxAlbums) {
-            processLineDiscoGS(line, albums);
+        while ((line = reader.readLine()) != null && albumTS.size() < maxAlbums) {
+            processLineDiscoGS(line, albumTS);
             processedLines++;
 
             if (processedLines % 10000 == 0) { //Limit for now until further optimization.
                 //System.out.println(processedLines + " linea prozetatutak.");
                 //System.out.println(albums.get(albums.size() - 1).toString());
-                System.out.println("Album guztiak: " + albums.size());
+                System.out.println("Album guztiak: " + albumTS.size());
             }
         }
         reader.close();
-        System.out.println("Albumes guztiak: " + albums.size());
+        System.out.println("Albumes guztiak: " + albumTS.size());
         System.out.println("Linea guztiak: " + processedLines);
-        return albums;
+        return albumTS;
     }
 
     /**
@@ -64,8 +64,8 @@ public class DiscoGSLoader {
      * @return list of Album objects.
      * @throws IOException if an I/O error occurs.
      */
-    public List<Album> loadAlbums(InputStream inputStream) throws IOException {
-        List<Album> albums = new ArrayList<>();
+    public List<AlbumT> loadAlbums(InputStream inputStream) throws IOException {
+        List<AlbumT> albumTS = new ArrayList<>();
         int processedLines = 0;
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
@@ -73,22 +73,22 @@ public class DiscoGSLoader {
         reader.readLine();
 
         while ((line = reader.readLine()) != null) {
-            processLineDiscoGS(line, albums);
+            processLineDiscoGS(line, albumTS);
             processedLines++;
 
             if (processedLines % 100 == 0) { //Limit for now until further optimization.
                 //System.out.println(processedLines + " linea prozetatutak.");
                 //System.out.println(albums.get(albums.size() - 1).toString());
-                System.out.println("Album guztiak: " + albums.size());
+                System.out.println("Album guztiak: " + albumTS.size());
             }
         }
         reader.close();
-        System.out.println("Albumes guztiak: " + albums.size());
+        System.out.println("Albumes guztiak: " + albumTS.size());
         System.out.println("Linea guztiak: " + processedLines);
-        return albums;
+        return albumTS;
     }
 
-    private void processLineDiscoGS(String line, List<Album> albums) {
+    private void processLineDiscoGS(String line, List<AlbumT> albumTS) {
         if (line == null || line.trim().isEmpty()) return;
         // Assuming CSV columns do not include commas inside fields.
         String[] parts = line.split(",");
@@ -117,37 +117,37 @@ public class DiscoGSLoader {
         String style            = parts[10].trim().isEmpty() ? UNKNOWN_STYLE : parts[10].trim();
 
         // Get or create Artist.
-        Artist artist = artistMap.get(artistId);
-        if (artist == null) {
-            artist = new Artist(artistId, artistName);
-            artistMap.put(artistId, artist);
+        ArtistT artistT = artistMap.get(artistId);
+        if (artistT == null) {
+            artistT = new ArtistT(artistId, artistName);
+            artistMap.put(artistId, artistT);
         }
 
         // Get or create Label.
-        Label label = labelMap.get(labelId);
-        if (label == null) {
-            label = new Label(labelId, labelName);
-            labelMap.put(labelId, label);
+        LabelT labelT = labelMap.get(labelId);
+        if (labelT == null) {
+            labelT = new LabelT(labelId, labelName);
+            labelMap.put(labelId, labelT);
         }
 
         // Get or create Album.
-        Album album = albumMap.get(albumId);
-        if (album == null) {
-            album = new Album(albumId, albumTitle, artist, label);
-            album.getGenres().add(genre);
-            album.getStyles().add(style);
-            albumMap.put(albumId, album);
-            albums.add(album);
+        AlbumT albumT = albumMap.get(albumId);
+        if (albumT == null) {
+            albumT = new AlbumT(albumId, albumTitle, artistT, labelT);
+            albumT.getGenres().add(genre);
+            albumT.getStyles().add(style);
+            albumMap.put(albumId, albumT);
+            albumTS.add(albumT);
         } else {
-            album.getGenres().add(genre);
-            album.getStyles().add(style);
+            albumT.getGenres().add(genre);
+            albumT.getStyles().add(style);
         }
 
         // Create track.
         double duration = parseDuration(trackDurationStr);
-        String trackId = albumId + "_" + album.getTracks().size();
-        Track track = new Track(trackId, trackTitle, duration, artist, label);
-        album.getTracks().add(track);
+        String trackId = albumId + "_" + albumT.getTrackTS().size();
+        TrackT trackT = new TrackT(trackId, trackTitle, duration, artistT, labelT);
+        albumT.getTrackTS().add(trackT);
     }
 
     /**

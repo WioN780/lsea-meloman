@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class Album extends MediaItem {
+public class AlbumT extends MediaItem {
 
-    private List<Track> tracks;
+    private List<TrackT> trackTS;
 
     /**
      * Constructs an Album object with the specified details.
@@ -30,19 +30,19 @@ public class Album extends MediaItem {
      * @param year The year the album was released.
      * @param genres A set of genres associated with the album.
      * @param styles A set of styles associated with the album.
-     * @param artist The artist who created the album.
-     * @param label The label associated with the album.
-     * @param tracks A list of tracks in the album.
+     * @param artistT The artist who created the album.
+     * @param labelT The label associated with the album.
+     * @param trackTS A list of tracks in the album.
      */
 
-    public Album(String id, String title, int year, Set<String> genres, Set<String> styles, Artist artist, Label label, List<Track> tracks) {
-        super(id, title, year, genres, styles, artist, label);
-        this.tracks = tracks;
+    public AlbumT(String id, String title, int year, Set<String> genres, Set<String> styles, ArtistT artistT, LabelT labelT, List<TrackT> trackTS) {
+        super(id, title, year, genres, styles, artistT, labelT);
+        this.trackTS = trackTS;
     }
 
-    public Album(String id, String title, Artist artist, Label label) {
-        super(id, title, artist, label);
-        this.tracks = new ArrayList<Track>();
+    public AlbumT(String id, String title, ArtistT artistT, LabelT labelT) {
+        super(id, title, artistT, labelT);
+        this.trackTS = new ArrayList<TrackT>();
     }
 
     /**
@@ -52,13 +52,13 @@ public class Album extends MediaItem {
 
     @Override
     public void displayInfo() {
-        System.out.println("Album: " + getTitle() + " by " + artist.getName());
+        System.out.println("Album: " + getTitle() + " by " + artistT.getName());
         System.out.println("Year: " + getYear());
         System.out.println("Genres: " + getGenres());
         System.out.println("Tracks:");
         int i = 1;
-        for (Track track : tracks) {
-            System.out.println(" - " + i + ": " + track.getTitle());
+        for (TrackT trackT : trackTS) {
+            System.out.println(" - " + i + ": " + trackT.getTitle());
             i++;
         }
     }
@@ -70,13 +70,13 @@ public class Album extends MediaItem {
      */
 
     @Override
-    public Album clone() {
-        Album cloned = (Album) super.clone();
-        List<Track> clonedTracks = new ArrayList<>();
-        for (Track track : this.tracks) {
-            clonedTracks.add(track.clone());
+    public AlbumT clone() {
+        AlbumT cloned = (AlbumT) super.clone();
+        List<TrackT> clonedTrackTS = new ArrayList<>();
+        for (TrackT trackT : this.trackTS) {
+            clonedTrackTS.add(trackT.clone());
         }
-        cloned.setTracks(clonedTracks);
+        cloned.setTrackTS(clonedTrackTS);
         return cloned;
     }
 
@@ -89,11 +89,11 @@ public class Album extends MediaItem {
 
     @Override
     public String toString() {
-        String trackList = IntStream.range(0, tracks.size())
-                .mapToObj(i -> (i + 1) + ". " + tracks.get(i).toString())
+        String trackList = IntStream.range(0, trackTS.size())
+                .mapToObj(i -> (i + 1) + ". " + trackTS.get(i).toString())
                 .collect(Collectors.joining(";\n"));
 
-        return "Album [id=" + getId() + ", title=" + getTitle() + ", artist=" + artist.getName() + ", label=" + label.getName() +
+        return "Album [id=" + getId() + ", title=" + getTitle() + ", artist=" + artistT.getName() + ", label=" + labelT.getName() +
                 ", year=" + getYear() + ", genres=" + getGenres() + ", styles=" + getStyles() +
                 ", tracks:\n" + trackList + "]";
     }

@@ -13,7 +13,7 @@ A scalable, multilayered enterprise application designed to manage personal musi
 - **User Account Management**
     - Registration, login, and profile management
 - **Music Library Management**
-    - CRUD operations for music items (albums, artists, tracks)
+    - CRUD operations for music items (albumTS, artists, trackTS)
     - Categorization and tagging (genre, mood, etc.)
 - **Search & Discovery**
     - Advanced search functionalities

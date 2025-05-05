@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class Artist extends MediaOwner {
+public class ArtistT extends MediaOwner {
     private String realName;
     private List<String> aliases;
     private List<String> groups;
@@ -31,23 +31,23 @@ public class Artist extends MediaOwner {
      * @param urls A set of URLs associated with the artist.
      */
 
-    public Artist(String id, String name,
-                  String realName, List<String> aliases, List<String> groups, Set<String> urls) {
+    public ArtistT(String id, String name,
+                   String realName, List<String> aliases, List<String> groups, Set<String> urls) {
         super(id, name, new ArrayList<>(), urls);
         this.realName = realName;
         this.aliases = aliases;
         this.groups = groups;
     }
 
-    public Artist(String id, String name, List<MediaItem> ownedItems,
-                  String realName, List<String> aliases, List<String> groups, Set<String> urls) {
+    public ArtistT(String id, String name, List<MediaItem> ownedItems,
+                   String realName, List<String> aliases, List<String> groups, Set<String> urls) {
         super(id, name, ownedItems, urls);
         this.realName = realName;
         this.aliases = aliases;
         this.groups = groups;
     }
 
-    public Artist(String artistId, String artistName) {
+    public ArtistT(String artistId, String artistName) {
         super(artistId, artistName);
     }
 
@@ -58,8 +58,8 @@ public class Artist extends MediaOwner {
      */
 
     @Override
-    public Artist clone() {
-        Artist cloned = (Artist) super.clone();
+    public ArtistT clone() {
+        ArtistT cloned = (ArtistT) super.clone();
         if (this.aliases != null) {
             cloned.setAliases(new ArrayList<>(this.aliases));
         }
