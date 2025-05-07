@@ -5,37 +5,47 @@ import com.meloman.project.repositories.*;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Application for importing disco data from CSV into Derby database
+ * Component for importing disco data from CSV into Derby database
  */
-@SpringBootApplication(scanBasePackages = "com.meloman.project")
-public class DiscoGSLoaderDatabase {
+@Component
+public class DiscoGSLoaderComponent {
 
-    private static final String CSV_FILE_PATH = "src/main/resources/DiscoGSdata.cleaned.corrected.csv";
+    private static final String CSV_FILE_PATH = "src/main/resources/DiscoGSdata.cleaned.csv";
 
-    public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(DiscoGSLoaderDatabase.class, args);
+    @Autowired
+    private ArtistRepository artistRepository;
 
-        // Get repositories
-        ArtistRepository artistRepository = context.getBean(ArtistRepository.class);
-        LabelRepository labelRepository = context.getBean(LabelRepository.class);
-        GenreRepository genreRepository = context.getBean(GenreRepository.class);
-        StyleRepository styleRepository = context.getBean(StyleRepository.class);
-        TrackRepository trackRepository = context.getBean(TrackRepository.class);
-        AlbumRepository albumRepository = context.getBean(AlbumRepository.class);
+    @Autowired
+    private LabelRepository labelRepository;
 
+    @Autowired
+    private GenreRepository genreRepository;
+
+    @Autowired
+    private StyleRepository styleRepository;
+
+    @Autowired
+    private TrackRepository trackRepository;
+
+    @Autowired
+    private AlbumRepository albumRepository;
+
+    /**
+     * Import data from CSV file
+     */
+    public void importDataFromCsv() {
         // Maps to track entities that have been created
         Map<String, Artist> artistMap = new HashMap<>();
         Map<String, Label> labelMap = new HashMap<>();
