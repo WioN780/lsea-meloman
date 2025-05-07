@@ -1,7 +1,6 @@
-package com.meloman.project.application_entry;
+package com.meloman.project;
 
-import com.meloman.project.DiscoGSLoaderComponent;
-import com.meloman.project.SpotifyPlaylistLoaderComponent;
+import com.meloman.project.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,6 +24,27 @@ public class ApplicationTest {
     @Autowired
     private SpotifyPlaylistLoaderComponent spotifyPlaylistLoaderComponent;
 
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
+
+    @Autowired
+    private GenreRepository genreRepository;
+
+    @Autowired
+    private StyleRepository styleRepository;
+
+    @Autowired
+    private TrackRepository trackRepository;
+
+    @Autowired
+    private AlbumRepository albumRepository;
+
+    @Autowired
+    private PlaylistRepository playlistRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(ApplicationTest.class, args);
     }
@@ -40,8 +60,9 @@ public class ApplicationTest {
                 System.out.println("1. Load Songs from DiscoGS CSV");
                 System.out.println("2. Load Playlists from Spotify JSON");
                 System.out.println("3. Load Both");
-                System.out.println("4. Exit");
-                System.out.print("Enter your choice (1-4): ");
+                System.out.println("4. Run tests");
+                System.out.println("5. Exit");
+                System.out.print("Enter your choice (1-5): ");
 
                 if (scanner.hasNextInt()) {
                     int choice = scanner.nextInt();
@@ -57,6 +78,9 @@ public class ApplicationTest {
                             loadPlaylists();
                             break;
                         case 4:
+                            runTests();
+                            break;
+                        case 5:
                             exit = true;
                             break;
                         default:
@@ -70,6 +94,67 @@ public class ApplicationTest {
 
             System.exit(0);
         };
+    }
+
+    private void runTests() {
+
+        // 1) DiscoGS import test
+        //measure("DiscoGS CSV import", this::loadSongs);
+
+        // 2) Spotify import test
+        //measure("Spotify playlist import", this::loadPlaylists);
+
+        // 3) Artists with the most tracks
+        measure("findWithMostTracks()",
+                () -> System.out.println(
+                        "Artists returned: " + artistRepository.findTopArtists(10).size())
+        );
+
+        // 4) Top 10 styles by appearance
+        final int N = 10;
+        measure("findMostPopularStyles(" + N + ")",
+                () -> System.out.println(
+                        "Styles returned:  " + styleRepository.findMostPopular(N).size())
+        );
+
+        // 5) Top 10 genres by appearance
+        measure("findMostPopularGenres(" + N + ")",
+                () -> System.out.println(
+                        "Genres returned:  " + genreRepository.findMostPopular(N).size())
+        );
+
+        // 6) Labels with the most tracks
+        measure("findWithMostTracks() on LabelRepository",
+                () -> System.out.println(
+                        "Labels returned:  " + labelRepository.findTopLabels(10).size())
+        );
+
+        System.out.println("All tests complete.");
+    }
+
+    /**
+     * Utility wrapper
+     *
+     * @param label description
+     * @param task  code to execute
+     */
+    private void measure(String label, Runnable task) {
+        Runtime rt = Runtime.getRuntime();
+
+        rt.gc();
+        long memBefore = rt.totalMemory() - rt.freeMemory();
+
+        long start = System.nanoTime();
+
+        task.run();
+
+        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
+        rt.gc();
+        long memAfter = rt.totalMemory() - rt.freeMemory();
+
+        long diffKb = (memAfter - memBefore) / 1024;
+
+        System.out.printf("%-35s : %6d ms  |  %+8d KB%n", label, elapsedMs, diffKb);
     }
 
     /**

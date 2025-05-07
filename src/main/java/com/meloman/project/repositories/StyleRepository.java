@@ -16,24 +16,14 @@ public interface StyleRepository extends JpaRepository<Style, String> {
     @Query(
     value =
     """
-    SELECT s.*
-            FROM Style s
-            JOIN song_style ss ON ss.style_id = s.id
-            JOIN album_style als ON als.style_id = s.id
-            GROUP BY s.id
-            HAVING COUNT(*) = (
-                SELECT MAX(appearances_count)
-                FROM (
-                    SELECT COUNT(*) AS appearances_count
-                    FROM (
-                        SELECT style_id FROM song_style
-                        UNION ALL
-                        SELECT style_id FROM album_style
-                    ) combined_styles
-                    GROUP BY style_id
-                )
-            )
-            FETCH FIRST :n ROWS ONLY
+    SELECT s.id,
+           s.name
+    FROM   Style s
+    LEFT   JOIN track_style ts ON ts.style_id = s.id
+    LEFT   JOIN album_style als ON als.style_id = s.id
+    GROUP  BY s.id, s.name
+    ORDER  BY COUNT(*) DESC
+    FETCH  FIRST :n ROWS ONLY;
     """, nativeQuery = true
     )
     List<Style> findMostPopular(@Param("n") int n);

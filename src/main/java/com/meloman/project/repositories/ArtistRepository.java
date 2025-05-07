@@ -17,18 +17,12 @@ public interface ArtistRepository extends JpaRepository<Artist, String> {
     List<Artist> findByName(String name);
 
     @Query(value = """
-    SELECT a.*
-    FROM Artist a
-    JOIN Track t ON a.id = t.artist_id
-    GROUP BY a.id
-    HAVING COUNT(*) = (
-        SELECT MAX(track_count)
-        FROM (
-            SELECT COUNT(*) AS track_count
-            FROM Track
-            GROUP BY artist_id
-        )
-    )
+    SELECT a.id, a.name, a.contact_info
+    FROM   Artist a
+    JOIN   artist_track art ON a.id = art.artist_id
+    GROUP  BY a.id, a.name, a.contact_info
+    ORDER  BY COUNT(*) DESC
+    FETCH  FIRST :n ROWS ONLY
     """, nativeQuery = true)
-    List<Artist> findWithMostTracks();
+    List<Artist> findTopArtists(@Param("n") int n);
 }

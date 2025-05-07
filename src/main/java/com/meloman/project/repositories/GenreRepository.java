@@ -13,29 +13,17 @@ import java.util.List;
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, String> {
     //
-    @Query(
-    value =
-            """
-            SELECT g.*
-                    FROM Genre g
-                    JOIN song_genre ss ON sg.genre_id = g.id
-                    JOIN album_genre alg ON alg.genre_id = s.id
-                    GROUP BY s.id
-                    HAVING COUNT(*) = (
-                        SELECT MAX(appearances_count)
-                        FROM (
-                            SELECT COUNT(*) AS appearances_count
-                            FROM (
-                                SELECT genre_id FROM song_genre
-                                UNION ALL
-                                SELECT genre_id FROM album_genre
-                            ) combined_genres
-                            GROUP BY genre_id
-                        )
-                    )
-                    FETCH FIRST :n ROWS ONLY
-            """, nativeQuery = true
-    )
+    @Query(value = """
+    SELECT g.id,
+           g.name
+    FROM   Genre g
+    LEFT   JOIN track_genre tg ON tg.genre_id = g.id
+    LEFT   JOIN album_genre ag ON ag.genre_id = g.id
+    GROUP  BY g.id, g.name
+    ORDER  BY COUNT(*) DESC
+    FETCH  FIRST :n ROWS ONLY
+    """, nativeQuery = true)
     List<Genre> findMostPopular(@Param("n") int n);
+
 
 }
