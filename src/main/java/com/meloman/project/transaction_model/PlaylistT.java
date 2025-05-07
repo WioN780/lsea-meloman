@@ -13,7 +13,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class Playlist {
+public class PlaylistT {
 
     /**
      * Unique identifier for the playlist.
@@ -42,7 +42,7 @@ public class Playlist {
     /**
      * Set of tracks included in the playlist.
      */
-    private Set<Track> tracks;
+    private Set<TrackT> trackTS;
 
     /**
      * Total number of unique albums in the playlist.
@@ -63,11 +63,11 @@ public class Playlist {
      * Constructs a Playlist with the given set of tracks and number of followers.
      * Automatically calculates the number of unique albums and artists.
      *
-     * @param tracks        the set of tracks in the playlist
+     * @param trackTS        the set of tracks in the playlist
      * @param numFollowers  the number of followers for the playlist
      */
-    public Playlist(Set<Track> tracks, int numFollowers) {
-        this.tracks = tracks;
+    public PlaylistT(Set<TrackT> trackTS, int numFollowers) {
+        this.trackTS = trackTS;
         this.numFollowers = numFollowers;
         this.name = "Unnamed Playlist";
         this.pid = "unknown_pid";
@@ -84,16 +84,16 @@ public class Playlist {
      * @param name           the playlist name
      * @param collaborative  whether the playlist is collaborative
      * @param modifiedAt     timestamp when the playlist was last modified
-     * @param tracks         the set of tracks in the playlist
+     * @param trackTS         the set of tracks in the playlist
      * @param numFollowers   the number of followers for the playlist
      */
-    public Playlist(String pid, String name, boolean collaborative, long modifiedAt,
-                    Set<Track> tracks, int numFollowers) {
+    public PlaylistT(String pid, String name, boolean collaborative, long modifiedAt,
+                     Set<TrackT> trackTS, int numFollowers) {
         this.pid = pid;
         this.name = name;
         this.collaborative = collaborative;
         this.modifiedAt = modifiedAt;
-        this.tracks = tracks;
+        this.trackTS = trackTS;
         this.numFollowers = numFollowers;
         calculateNumAlbums();
         calculateNumArtists();
@@ -104,9 +104,9 @@ public class Playlist {
      */
     private void calculateNumAlbums() {
         Set<String> albumIds = new HashSet<>();
-        for (Track track : tracks) {
+        for (TrackT trackT : trackTS) {
             // Extract album ID from track ID (assuming track ID format includes album ID)
-            String albumId = extractAlbumId(track.getId());
+            String albumId = extractAlbumId(trackT.getId());
             albumIds.add(albumId);
         }
         this.numAlbums = albumIds.size();
@@ -129,8 +129,8 @@ public class Playlist {
      */
     private void calculateNumArtists() {
         Set<String> artistIds = new HashSet<>();
-        for (Track track : tracks) {
-            artistIds.add(track.getArtist().getId());
+        for (TrackT trackT : trackTS) {
+            artistIds.add(trackT.getArtistT().getId());
         }
         this.numArtists = artistIds.size();
     }
@@ -152,12 +152,12 @@ public class Playlist {
         return modifiedAt;
     }
 
-    public Set<Track> getTracks() {
-        return tracks;
+    public Set<TrackT> getTrackTS() {
+        return trackTS;
     }
 
-    public void setTracks(Set<Track> tracks) {
-        this.tracks = tracks;
+    public void setTrackTS(Set<TrackT> trackTS) {
+        this.trackTS = trackTS;
         calculateNumAlbums();
         calculateNumArtists();
     }
@@ -179,7 +179,7 @@ public class Playlist {
     }
 
     public int getNumTracks() {
-        return tracks.size();
+        return trackTS.size();
     }
 
     @Override

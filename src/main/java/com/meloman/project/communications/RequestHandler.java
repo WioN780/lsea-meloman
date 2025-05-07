@@ -1,8 +1,8 @@
 package com.meloman.project.communications;
 
-import com.meloman.project.transaction_model.Album;
+import com.meloman.project.transaction_model.AlbumT;
 import com.meloman.project.transaction_model.MediaItem;
-import com.meloman.project.transaction_model.Playlist;
+import com.meloman.project.transaction_model.PlaylistT;
 import com.meloman.project.service_model.User;
 
 import java.util.ArrayList;
@@ -20,15 +20,15 @@ public class RequestHandler {
         switch (req.getType()) {
 
             case GET_10_RANDOM_ALBUMS -> {
-                ArrayList<Album> albums = server.getRandomItems(
-                        server.getAvailableAlbums(), 10);
-                return new Response(true, albums, "10 random albums");
+                ArrayList<AlbumT> albumTS = server.getRandomItems(
+                        server.getAvailableAlbumTS(), 10);
+                return new Response(true, albumTS, "10 random albums");
             }
 
             case GET_10_RANDOM_PLAYLISTS -> {
-                ArrayList<Playlist> playlists = server.getRandomItems(
-                        server.getAvailablePlaylists(), 10);
-                return new Response(true, playlists, "10 random playlists");
+                ArrayList<PlaylistT> playlistTS = server.getRandomItems(
+                        server.getAvailablePlaylistTS(), 10);
+                return new Response(true, playlistTS, "10 random playlists");
             }
 
             case ADD_NEW_USER -> {

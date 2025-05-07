@@ -39,10 +39,10 @@ public abstract class MediaItem implements Serializable, Cloneable, Comparable<M
     protected Set<String> styles;
 
     /** Artist associated with the media item. */
-    protected Artist artist;
+    protected ArtistT artistT;
 
     /** Label that published the media item. */
-    protected Label label;
+    protected LabelT labelT;
 
     /**
      * Constructs a MediaItem with the provided metadata.
@@ -52,29 +52,29 @@ public abstract class MediaItem implements Serializable, Cloneable, Comparable<M
      * @param year   the year the media item was released
      * @param genres the set of genres associated with the item
      * @param styles the set of styles associated with the item
-     * @param artist the artist who performed or created the media
-     * @param label  the label that published the media
+     * @param artistT the artist who performed or created the media
+     * @param labelT  the label that published the media
      */
     public MediaItem(String id, String title, int year, Set<String> genres, Set<String> styles,
-                     Artist artist, Label label) {
+                     ArtistT artistT, LabelT labelT) {
         this.id = id;
         this.title = title;
         this.year = year;
         this.genres = genres;
         this.styles = styles;
-        this.artist = artist;
-        this.label = label;
+        this.artistT = artistT;
+        this.labelT = labelT;
     }
 
     public MediaItem (String id) {
         this.id = id;
     }
 
-    public MediaItem(String id, String title, Artist artist, Label label) {
+    public MediaItem(String id, String title, ArtistT artistT, LabelT labelT) {
         this.id = id;
         this.title = title;
-        this.artist = artist;
-        this.label = label;
+        this.artistT = artistT;
+        this.labelT = labelT;
         this.genres = new HashSet<String>();
         this.styles = new HashSet<String>();
     }
@@ -120,6 +120,6 @@ public abstract class MediaItem implements Serializable, Cloneable, Comparable<M
     public String toString() {
         return "MediaItem [id=" + id + ", title=" + title + ", year=" + year +
                 ", genres=" + genres + ", styles=" + styles +
-                ", artist=" + artist.getName() + ", label=" + label.getName() + "]";
+                ", artist=" + artistT.getName() + ", label=" + labelT.getName() + "]";
     }
 }
