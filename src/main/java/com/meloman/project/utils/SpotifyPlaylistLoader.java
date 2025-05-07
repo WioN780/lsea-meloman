@@ -1,11 +1,8 @@
 package com.meloman.project.utils;
 
 
-import com.meloman.project.data_model.Album;
-import com.meloman.project.data_model.Artist;
-import com.meloman.project.data_model.Label;
-import com.meloman.project.data_model.Track;
-import com.meloman.project.data_model.Playlist;
+import com.meloman.project.transaction_model.*;
+import com.meloman.project.transaction_model.AlbumT;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,8 +13,8 @@ import java.util.*;
 public class SpotifyPlaylistLoader {
 
     // Maps to avoid duplicate creations.
-    private Map<String, Artist> artistMap = new HashMap<>();
-    private Map<String, Album> albumMap = new HashMap<>();
+    private Map<String, ArtistT> artistMap = new HashMap<>();
+    private Map<String, AlbumT> albumMap = new HashMap<>();
 
     // Define static constants for default values
     private static final String UNKNOWN_ARTIST = "Unknown Artist";
@@ -35,8 +32,8 @@ public class SpotifyPlaylistLoader {
      * @return list of Playlist objects.
      * @throws IOException if an I/O error occurs.
      */
-    public List<Playlist> loadPlaylists(InputStream inputStream) throws IOException {
-        List<Playlist> playlists = new ArrayList<>();
+    public List<PlaylistT> loadPlaylists(InputStream inputStream) throws IOException {
+        List<PlaylistT> playlistTS = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder jsonString = new StringBuilder();
         String line;
@@ -57,9 +54,9 @@ public class SpotifyPlaylistLoader {
 
             for (int i = 0; i < totalPlaylists; i++) {
                 JSONObject playlistJson = playlistsArray.getJSONObject(i);
-                Playlist playlist = processPlaylist(playlistJson);
-                if (playlist != null) {
-                    playlists.add(playlist);
+                PlaylistT playlistT = processPlaylist(playlistJson);
+                if (playlistT != null) {
+                    playlistTS.add(playlistT);
                 }
 
                 if ((i + 1) % 100 == 0) {
@@ -68,8 +65,8 @@ public class SpotifyPlaylistLoader {
             }
         }
 
-        System.out.println("Total playlists loaded: " + playlists.size());
-        return playlists;
+        System.out.println("Total playlists loaded: " + playlistTS.size());
+        return playlistTS;
     }
 
     /**
@@ -77,7 +74,7 @@ public class SpotifyPlaylistLoader {
      * @param playlistJson JSON object representing a playlist
      * @return a Playlist object
      */
-    private Playlist processPlaylist(JSONObject playlistJson) {
+    private PlaylistT processPlaylist(JSONObject playlistJson) {
         // Extract playlist info
         String name = playlistJson.optString("name", "Unnamed Playlist");
         boolean collaborative = playlistJson.optBoolean("collaborative", false);
@@ -87,20 +84,20 @@ public class SpotifyPlaylistLoader {
 
         // Process tracks
         JSONArray tracksArray = playlistJson.optJSONArray("tracks");
-        Set<Track> tracks = new HashSet<>();
+        Set<TrackT> trackTS = new HashSet<>();
 
         if (tracksArray != null) {
             for (int i = 0; i < tracksArray.length(); i++) {
                 JSONObject trackJson = tracksArray.getJSONObject(i);
-                Track track = processTrack(trackJson);
-                if (track != null) {
-                    tracks.add(track);
+                TrackT trackT = processTrack(trackJson);
+                if (trackT != null) {
+                    trackTS.add(trackT);
                 }
             }
         }
 
         // Create and return the playlist
-        return new Playlist(tracks, numFollowers);
+        return new PlaylistT(trackTS, numFollowers);
     }
 
     /**
@@ -108,7 +105,7 @@ public class SpotifyPlaylistLoader {
      * @param trackJson JSON object representing a track
      * @return a Track object
      */
-    private Track processTrack(JSONObject trackJson) {
+    private TrackT processTrack(JSONObject trackJson) {
         int position = trackJson.optInt("pos", 0);
         String artistName = trackJson.optString("artist_name", UNKNOWN_ARTIST);
         String trackName = trackJson.optString("track_name", UNTITLED_TRACK);
@@ -124,25 +121,25 @@ public class SpotifyPlaylistLoader {
         String trackId = generateTrackId(trackName, albumId);
 
         // Get or create Artist
-        Artist artist = artistMap.get(artistId);
-        if (artist == null) {
-            artist = new Artist(artistId, artistName);
-            artistMap.put(artistId, artist);
+        ArtistT artistT = artistMap.get(artistId);
+        if (artistT == null) {
+            artistT = new ArtistT(artistId, artistName);
+            artistMap.put(artistId, artistT);
         }
 
         // Create a default label
-        Label label = new Label(UNKNOWN_LABEL_ID, UNKNOWN_LABEL);
+        LabelT labelT = new LabelT(UNKNOWN_LABEL_ID, UNKNOWN_LABEL);
 
         // Get or create Album
-        Album album = albumMap.get(albumId);
-        if (album == null) {
-            album = new Album(albumId, albumName, artist, label);
-            albumMap.put(albumId, album);
+        AlbumT albumT = albumMap.get(albumId);
+        if (albumT == null) {
+            albumT = new AlbumT(albumId, albumName, artistT, labelT);
+            albumMap.put(albumId, albumT);
         }
 
         // Create and return the track
-        Track track = new Track(trackId, trackName, durationSecs, artist, label);
-        return track;
+        TrackT trackT = new TrackT(trackId, trackName, durationSecs, artistT, labelT);
+        return trackT;
     }
 
     /**

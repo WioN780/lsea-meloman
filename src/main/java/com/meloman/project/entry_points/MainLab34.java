@@ -1,7 +1,7 @@
 package com.meloman.project.entry_points;
 
-import com.meloman.project.data_model.Album;
-import com.meloman.project.data_model.Playlist;
+import com.meloman.project.transaction_model.AlbumT;
+import com.meloman.project.transaction_model.PlaylistT;
 import com.meloman.project.utils.AnalysisRunner;
 import com.meloman.project.utils.DiscoGSLoader;
 import com.meloman.project.utils.SpotifyPlaylistLoader;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MainLab34 {
     public static void main(String[] args) throws IOException {
-        List<Playlist> playlists = new ArrayList<>();
+        List<PlaylistT> playlistTS = new ArrayList<>();
 
         int num_of_slices = 100;
 
@@ -30,8 +30,8 @@ public class MainLab34 {
                     throw new IOException("File not found." + file);
                 }
 
-                playlists.addAll(loaderPlaylists.loadPlaylists(inputStreamPlaylists));
-                System.out.println(playlists.size() + " playlists loaded");
+                playlistTS.addAll(loaderPlaylists.loadPlaylists(inputStreamPlaylists));
+                System.out.println(playlistTS.size() + " playlists loaded");
 
             } catch (IOException e) {
                 System.err.println("Error: " + e.getMessage());
@@ -48,11 +48,11 @@ public class MainLab34 {
             throw new IOException("File not found: DiscoGSdata.cleaned.csv");
         }
 
-        List<Album> albums = loaderAlbums.loadAlbums(inputStreamAlbums);
-        System.out.println(albums.size() + " albums loaded");
-        System.out.println(playlists.size() + " playlists loaded");
+        List<AlbumT> albumTS = loaderAlbums.loadAlbums(inputStreamAlbums);
+        System.out.println(albumTS.size() + " albums loaded");
+        System.out.println(playlistTS.size() + " playlists loaded");
 
-        AnalysisRunner ar = new AnalysisRunner(albums, playlists);
+        AnalysisRunner ar = new AnalysisRunner(albumTS, playlistTS);
 
         ar.singleThreadAnalysis();
         ar.parallelThreadAnalysis(2);

@@ -1,7 +1,7 @@
 package com.meloman.project.communications;
 
-import com.meloman.project.data_model.Album;
-import com.meloman.project.data_model.Playlist;
+import com.meloman.project.transaction_model.AlbumT;
+import com.meloman.project.transaction_model.PlaylistT;
 import com.meloman.project.utils.DiscoGSLoader;
 import com.meloman.project.utils.SpotifyPlaylistLoader;
 import com.meloman.project.service_model.User;
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /*
  * Server-side class managing user connections and message routing
@@ -29,8 +28,8 @@ import java.util.concurrent.Executors;
 @Setter
 public class Server {
     private ArrayList<User> connectedUsers;
-    private List<Album> availableAlbums;
-    private List<Playlist> availablePlaylists;
+    private List<AlbumT> availableAlbumTS;
+    private List<PlaylistT> availablePlaylistTS;
     private RequestHandler requestHandler;
 
     private final static int portUDP = 10555;
@@ -39,8 +38,8 @@ public class Server {
     public Server() {
         // Initialize collections
         this.connectedUsers = new ArrayList<>();
-        this.availableAlbums = new ArrayList<>();
-        this.availablePlaylists = new ArrayList<>();
+        this.availableAlbumTS = new ArrayList<>();
+        this.availablePlaylistTS = new ArrayList<>();
 
         // Initialize request handler
         this.requestHandler = new RequestHandler(this);
@@ -52,8 +51,8 @@ public class Server {
         startUDPListener();
         startTCPListener();
 
-        System.out.println("Server initialized with " + availableAlbums.size() + " albums and "
-                + availablePlaylists.size() + " playlists");
+        System.out.println("Server initialized with " + availableAlbumTS.size() + " albums and "
+                + availablePlaylistTS.size() + " playlists");
     }
 
     /**
@@ -66,7 +65,7 @@ public class Server {
             InputStream albumStream = SpotifyPlaylistLoader.class.getClassLoader()
                     .getResourceAsStream("DiscoGSdata.cleaned.csv");
             if (albumStream != null) {
-                this.availableAlbums = albumLoader.loadAlbums(albumStream, 1000);
+                this.availableAlbumTS = albumLoader.loadAlbums(albumStream, 1000);
             } else {
                 System.err.println("Could not find album data file");
             }
@@ -76,7 +75,7 @@ public class Server {
             InputStream playlistStream = SpotifyPlaylistLoader.class.getClassLoader()
                     .getResourceAsStream("spotify/mpd.slice.0-999.json");
             if (playlistStream != null) {
-                this.availablePlaylists = playlistLoader.loadPlaylists(playlistStream);
+                this.availablePlaylistTS = playlistLoader.loadPlaylists(playlistStream);
             } else {
                 System.err.println("Could not find playlist data file");
             }

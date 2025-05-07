@@ -1,4 +1,4 @@
-package com.meloman.project.data_model;
+package com.meloman.project.transaction_model;
 
 import java.util.Comparator;
 
@@ -8,7 +8,7 @@ import java.util.Comparator;
  *
  */
 
-public class AlbumTitleComparator implements Comparator<Album> {
+public class AlbumTitleComparator implements Comparator<AlbumT> {
 
     /**
      * Compares two albums by their title in alphabetical order.
@@ -20,7 +20,7 @@ public class AlbumTitleComparator implements Comparator<Album> {
      */
 
     @Override
-    public int compare(Album a1, Album a2) {
+    public int compare(AlbumT a1, AlbumT a2) {
         // Compare by title alphabetically (ascending order)
         return a1.getTitle().compareTo(a2.getTitle());
     }

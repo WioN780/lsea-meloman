@@ -1,6 +1,6 @@
 package com.meloman.project.entry_points;
-import com.meloman.project.data_model.Album;
-import com.meloman.project.data_model.Playlist;
+import com.meloman.project.transaction_model.AlbumT;
+import com.meloman.project.transaction_model.PlaylistT;
 import com.meloman.project.utils.DiscoGSLoader;
 import com.meloman.project.utils.SpotifyPlaylistLoader;
 
@@ -40,17 +40,17 @@ public class ProcessingTest {
                         throw new IOException("File not found." + file);
                     }
 
-                    List<Playlist> playlists = loader.loadPlaylists(inputStream);
-                    System.out.println(playlists.size() + " playlists loaded");
+                    List<PlaylistT> playlistTS = loader.loadPlaylists(inputStream);
+                    System.out.println(playlistTS.size() + " playlists loaded");
 
                     // Print details of first few playlists if available
-                    int playlistsToPrint = Math.min(3, playlists.size());
+                    int playlistsToPrint = Math.min(3, playlistTS.size());
                     for (int i = 0; i < playlistsToPrint; i++) {
                         System.out.println("\nPlaylist " + (i + 1) + " details:");
-                        System.out.println(playlists.get(i).toString());
-                        System.out.println("Number of tracks: " + playlists.get(i).getNumTracks());
-                        System.out.println("Number of albums: " + playlists.get(i).getNumAlbums());
-                        System.out.println("Number of artists: " + playlists.get(i).getNumArtists());
+                        System.out.println(playlistTS.get(i).toString());
+                        System.out.println("Number of tracks: " + playlistTS.get(i).getNumTracks());
+                        System.out.println("Number of albums: " + playlistTS.get(i).getNumAlbums());
+                        System.out.println("Number of artists: " + playlistTS.get(i).getNumArtists());
                     }
 
                 } catch (IOException e) {
@@ -73,8 +73,8 @@ public class ProcessingTest {
                     throw new IOException("File not found: DiscoGSdata.csv");
                 }
 
-                List<Album> albums = loader.loadAlbums(inputStream);
-                System.out.println(albums.size() + " albums loaded");
+                List<AlbumT> albumTS = loader.loadAlbums(inputStream);
+                System.out.println(albumTS.size() + " albums loaded");
 
             } catch (IOException e) {
                 System.err.println("Error: " + e.getMessage());

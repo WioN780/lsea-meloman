@@ -1,4 +1,4 @@
-package com.meloman.project.data_model;
+package com.meloman.project.transaction_model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class Track extends MediaItem implements Cloneable {
+public class TrackT extends MediaItem implements Cloneable {
 
     /**
      * Duration of the track in minutes.
@@ -25,22 +25,22 @@ public class Track extends MediaItem implements Cloneable {
      * @param year     release year of the track
      * @param genres   set of genres associated with the track
      * @param styles   set of musical styles of the track
-     * @param artist   the artist associated with the track
-     * @param label    the label that produced or published the track
+     * @param artistT   the artist associated with the track
+     * @param labelT    the label that produced or published the track
      * @param duration the duration of the track in seconds
      */
-    public Track(String id, String title, int year, Set<String> genres, Set<String> styles,
-                 Artist artist, Label label, double duration) {
-        super(id, title, year, genres, styles, artist, label);
+    public TrackT(String id, String title, int year, Set<String> genres, Set<String> styles,
+                  ArtistT artistT, LabelT labelT, double duration) {
+        super(id, title, year, genres, styles, artistT, labelT);
         this.duration = duration;
     }
 
-    public Track(String id, String trackTitle, double duration, Artist artist, Label label) {
+    public TrackT(String id, String trackTitle, double duration, ArtistT artistT, LabelT labelT) {
         super(id);
         this.title = trackTitle;
         this.duration = duration;
-        this.artist = artist;
-        this.label = label;
+        this.artistT = artistT;
+        this.labelT = labelT;
     }
 
     /**
@@ -50,8 +50,8 @@ public class Track extends MediaItem implements Cloneable {
      * @return a clone of this Track
      */
     @Override
-    public Track clone() {
-        return (Track) super.clone();
+    public TrackT clone() {
+        return (TrackT) super.clone();
     }
 
     /**

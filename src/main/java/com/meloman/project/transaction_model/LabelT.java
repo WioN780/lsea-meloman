@@ -1,4 +1,4 @@
-package com.meloman.project.data_model;
+package com.meloman.project.transaction_model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class Label extends MediaOwner {
+public class LabelT extends MediaOwner {
     private String parentLabel;
     private Set<String> subLabels;
     private String contactInfo;
@@ -30,15 +30,15 @@ public class Label extends MediaOwner {
      * @param contactInfo Contact information for the label (e.g., email or phone number).
      */
 
-    public Label(String id, String name, String parentLabel, Set<String> subLabels,
-                 List<MediaItem> ownedItems, Set<String> urls, String contactInfo) {
+    public LabelT(String id, String name, String parentLabel, Set<String> subLabels,
+                  List<MediaItem> ownedItems, Set<String> urls, String contactInfo) {
         super(id, name, ownedItems, urls);
         this.parentLabel = parentLabel;
         this.subLabels = subLabels;
         this.contactInfo = contactInfo;
     }
 
-    public Label(String labelId, String labelName) {
+    public LabelT(String labelId, String labelName) {
         super(labelId, labelName);
 
     }
@@ -50,8 +50,8 @@ public class Label extends MediaOwner {
      */
 
     @Override
-    public Label clone() {
-        Label cloned = (Label) super.clone();
+    public LabelT clone() {
+        LabelT cloned = (LabelT) super.clone();
         if (this.subLabels != null) {
             cloned.setSubLabels(new HashSet<>(this.subLabels));
         }
