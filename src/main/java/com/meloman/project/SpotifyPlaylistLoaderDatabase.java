@@ -85,7 +85,7 @@ public class SpotifyPlaylistLoaderDatabase {
      */
     private static List<String> generateFilePaths(int numFiles) {
         List<String> filePaths = new ArrayList<>();
-        String basePath = "src/main/resources/com/meloman/project/data/";
+        String basePath = "src/main/resources/spotify/";
         for (int i = 0; i < numFiles; i++) {
             int start = i * 1000;
             String fileName = String.format("mpd.slice.%d-%d.json", start, start + 999);

@@ -1,17 +1,16 @@
-package com.meloman.project;
+package com.meloman.project.application_entry;
 
 import com.meloman.project.database_model.Artist;
 import com.meloman.project.repositories.ArtistRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  *  Spring and derby initialisation
  */
 
-@SpringBootApplication(scanBasePackages = "com.meloman.project")
+//@SpringBootApplication(scanBasePackages = "com.meloman.project")
 public class ApplicationTest {
 
     public static void main(String[] args) {

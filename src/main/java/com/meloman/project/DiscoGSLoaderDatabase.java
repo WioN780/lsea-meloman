@@ -23,7 +23,7 @@ import java.util.Set;
 @SpringBootApplication(scanBasePackages = "com.meloman.project")
 public class DiscoGSLoaderDatabase {
 
-    private static final String CSV_FILE_PATH = "src/main/resources/DiscoGSdata.test.csv";
+    private static final String CSV_FILE_PATH = "src/main/resources/DiscoGSdata.cleaned.corrected.csv";
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(DiscoGSLoaderDatabase.class, args);
