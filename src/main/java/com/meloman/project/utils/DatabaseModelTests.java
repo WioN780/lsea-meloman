@@ -1,4 +1,4 @@
-package com.meloman.project.test_classes;
+package com.meloman.project.utils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -7,9 +7,8 @@ import java.util.Set;
 
 import com.meloman.project.database_model.*;
 import com.meloman.project.repositories.*;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
-@SpringBootTest
 public class DatabaseModelTests {
 
     // Mock repositories
@@ -114,7 +113,7 @@ public class DatabaseModelTests {
         labelRepository.save(label2);
 
         // Act
-        List<Label> topLabels = labelRepository.findTopLabels(5);
+        List<Label> topLabels = labelRepository.findTopLabels(PageRequest.of(0, 5));
 
         // Assert
         assert topLabels != null : "Top labels query failed";
@@ -233,7 +232,7 @@ public class DatabaseModelTests {
         artistRepository.save(artist2);
 
         // Act
-        List<Artist> topArtists = artistRepository.findTopArtists(5);
+        List<Artist> topArtists = artistRepository.findTopArtists(PageRequest.of(0, 5));
 
         // Assert
         assert topArtists != null : "Top artists query failed";
@@ -673,7 +672,7 @@ public class DatabaseModelTests {
         genreRepository.save(genre3);
 
         // Act
-        List<Genre> mostPopularGenres = genreRepository.findMostPopular(2);
+        List<Genre> mostPopularGenres = genreRepository.findMostPopular(PageRequest.of(0, 2));
 
         // Assert
         assert mostPopularGenres != null : "Most popular genres query failed";
@@ -731,7 +730,7 @@ public class DatabaseModelTests {
         styleRepository.saveAll(List.of(style1, style2, style3));
 
         // Act
-        List<Style> popularStyles = styleRepository.findMostPopular(2);
+        List<Style> popularStyles = styleRepository.findMostPopular(PageRequest.of(0, 2));
 
         // Assert
         assert popularStyles.size() <= 2;
