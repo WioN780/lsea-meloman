@@ -2,7 +2,9 @@ package com.meloman.project.services;
 
 import com.meloman.project.database_model.Album;
 import com.meloman.project.repositories.AlbumRepository;
+import com.meloman.project.utils.AlbumCount;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,13 @@ public class AlbumService {
 
     public List<Album> getAll() {
         return albumRepository.findAll();
+    }
+
+    /**
+     * Compute the query: "Count sum of number of appearances of every song for an album"
+     */
+    public List<AlbumCount> sumOfAppearancesOfAlbumContent(int N) {
+        return albumRepository.findAlbumAppearanceCounts(PageRequest.of(0, N));
     }
 
     public Album update(Album updated) {
