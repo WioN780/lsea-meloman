@@ -1,4 +1,4 @@
-package com.meloman.project.tests;
+package com.meloman.project.test_classes;
 
 import java.util.HashSet;
 import java.util.List;
@@ -7,7 +7,9 @@ import java.util.Set;
 
 import com.meloman.project.database_model.*;
 import com.meloman.project.repositories.*;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class DatabaseModelTests {
 
     // Mock repositories
