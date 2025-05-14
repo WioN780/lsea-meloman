@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.List;
@@ -104,29 +105,30 @@ public class ApplicationTest {
         // 2) Spotify import test
         //measure("Spotify playlist import", this::loadPlaylists);
 
+        final int N = 10;
+
         // 3) Artists with the most tracks
         measure("findWithMostTracks()",
                 () -> System.out.println(
-                        "Artists returned: " + artistRepository.findTopArtists(10).size())
+                        "Artists returned: " + artistRepository.findTopArtists(PageRequest.of(0, N)).size())
         );
 
         // 4) Top 10 styles by appearance
-        final int N = 10;
         measure("findMostPopularStyles(" + N + ")",
                 () -> System.out.println(
-                        "Styles returned:  " + styleRepository.findMostPopular(N).size())
+                        "Styles returned:  " + styleRepository.findMostPopular(PageRequest.of(0, N)).size())
         );
 
         // 5) Top 10 genres by appearance
         measure("findMostPopularGenres(" + N + ")",
                 () -> System.out.println(
-                        "Genres returned:  " + genreRepository.findMostPopular(N).size())
+                        "Genres returned:  " + genreRepository.findMostPopular(PageRequest.of(0, N)).size())
         );
 
         // 6) Labels with the most tracks
         measure("findWithMostTracks() on LabelRepository",
                 () -> System.out.println(
-                        "Labels returned:  " + labelRepository.findTopLabels(10).size())
+                        "Labels returned:  " + labelRepository.findTopLabels(PageRequest.of(0, N)).size())
         );
 
         System.out.println("All tests complete.");

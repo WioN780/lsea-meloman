@@ -1,13 +1,12 @@
 package com.meloman.project.database_model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -21,6 +20,12 @@ public class Genre implements Serializable {
 
     @Column(name = "name", length = 255)
     private String name;
+
+    @ManyToMany(mappedBy = "genres")
+    private Set<Track> tracks = new HashSet<>();
+
+    @ManyToMany(mappedBy = "genres")
+    private Set<Album> albums = new HashSet<>();
 
     public Genre(){ }
 
