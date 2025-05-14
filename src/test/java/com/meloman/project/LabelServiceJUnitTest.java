@@ -39,6 +39,9 @@ public class LabelServiceJUnitTest {
         sample.setParentLabel(parent);
     }
 
+    /**
+     * Test saving an item
+     */
     @Test
     public void create_shouldDelegateToRepo() {
         when(repo.save(sample)).thenReturn(sample);
@@ -49,6 +52,9 @@ public class LabelServiceJUnitTest {
         verify(repo).save(sample);
     }
 
+    /**
+     *Test getting an item by id
+     */
     @Test
     public void getById_found() {
         when(repo.findById("L001")).thenReturn(Optional.of(sample));
@@ -59,12 +65,18 @@ public class LabelServiceJUnitTest {
         assertEquals(parent, out.getParentLabel());
     }
 
+    /**
+     *Test getting an item by id that does not exist
+     */
     @Test(expected = EntityNotFoundException.class)
     public void getById_notFound_throws() {
         when(repo.findById("X")).thenReturn(Optional.empty());
         svc.getById("X");
     }
 
+    /**
+     * Test getting all items
+     */
     @Test
     public void getAll_delegatesToRepo() {
         List<Label> all = List.of(sample, parent);
@@ -75,6 +87,9 @@ public class LabelServiceJUnitTest {
         assertEquals(all, out);
     }
 
+    /**
+     * Test getting top labels by includes
+     */
     @Test
     public void getTopLabelsByIncludes_returnsLabels() {
         when(repo.findTopLabels(PageRequest.of(0, 3)))
@@ -87,6 +102,9 @@ public class LabelServiceJUnitTest {
         assertSame(parent,  result.get(1));
     }
 
+    /**
+     *test updating an item
+     */
     @Test
     public void update_existing_updatesFieldsAndParent() {
         Label updated = new Label("L001", "New Name", null, "new@info.com", "https://new.url");
@@ -107,6 +125,9 @@ public class LabelServiceJUnitTest {
         verify(repo).save(sample);
     }
 
+    /**
+     * Test correct error throws when updating an item that does not exist
+     */
     @Test(expected = EntityNotFoundException.class)
     public void update_missing_throws() {
         when(repo.findById("X")).thenReturn(Optional.empty());
@@ -117,6 +138,9 @@ public class LabelServiceJUnitTest {
         svc.update(toUpdate);
     }
 
+    /**
+     * Test deletion of an item
+     */
     @Test
     public void delete_existing_delegates() {
         when(repo.existsById("L001")).thenReturn(true);
@@ -125,7 +149,9 @@ public class LabelServiceJUnitTest {
 
         verify(repo).deleteById("L001");
     }
-
+    /**
+     *Test correct throw
+     */
     @Test(expected = EntityNotFoundException.class)
     public void delete_missing_throws() {
         when(repo.existsById("X")).thenReturn(false);

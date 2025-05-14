@@ -37,6 +37,9 @@ public class GenreServiceJUnitTest {
         sample = new Genre("G1", "Rock");
     }
 
+    /**
+     * Test saving an item
+     */
     @Test
     public void create_shouldDelegateToRepo() {
         when(repo.save(sample)).thenReturn(sample);
@@ -47,6 +50,9 @@ public class GenreServiceJUnitTest {
         verify(repo).save(sample);
     }
 
+    /**
+     * Test getting an item by id
+     */
     @Test
     public void getById_found() {
         when(repo.findById("G1")).thenReturn(Optional.of(sample));
@@ -56,12 +62,18 @@ public class GenreServiceJUnitTest {
         assertEquals("Rock", out.getName());
     }
 
+    /**
+     * Test correct error throws when getting an item by id that does not exist
+     */
     @Test(expected = EntityNotFoundException.class)
     public void getById_notFound_throws() {
         when(repo.findById("X")).thenReturn(Optional.empty());
         svc.getById("X");
     }
 
+    /**
+     *Test getting all items
+     */
     @Test
     public void getAll_delegatesToRepo() {
         List<Genre> all = List.of(sample);
@@ -72,6 +84,9 @@ public class GenreServiceJUnitTest {
         assertEquals(all, out);
     }
 
+    /**
+     * Test order of getMostPopular
+     */
     @Test
     public void getMostPopular_returnsInOrder() {
         List<Genre> top2 = List.of(sample, new Genre("G2","Jazz"));
@@ -85,6 +100,9 @@ public class GenreServiceJUnitTest {
         assertEquals("Jazz",  result.get(1).getName());
     }
 
+    /**
+     * Test updating an item
+     */
     @Test
     public void update_existing_changesName() {
         Genre updated = new Genre("G1", "Prog Rock");
@@ -97,6 +115,9 @@ public class GenreServiceJUnitTest {
         verify(repo).save(sample);
     }
 
+    /**
+     *Test correct error throws when updating an item that does not exist
+     */
     @Test(expected = EntityNotFoundException.class)
     public void update_missing_throws() {
         when(repo.findById("X")).thenReturn(Optional.empty());
@@ -106,6 +127,9 @@ public class GenreServiceJUnitTest {
         svc.update(toUpdate);
     }
 
+    /**
+     *Test deletion of an item
+     */
     @Test
     public void delete_existing_delegates() {
         when(repo.existsById("G1")).thenReturn(true);
@@ -115,6 +139,9 @@ public class GenreServiceJUnitTest {
         verify(repo).deleteById("G1");
     }
 
+    /**
+     * Test correct error throws when deleting an item that does not exist
+     */
     @Test(expected = EntityNotFoundException.class)
     public void delete_missing_throws() {
         when(repo.existsById("X")).thenReturn(false);

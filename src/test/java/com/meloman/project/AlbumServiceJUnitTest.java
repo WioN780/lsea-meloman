@@ -47,6 +47,9 @@ public class AlbumServiceJUnitTest {
         );
     }
 
+    /**
+     * Test saving an item
+     */
     @Test
     public void create_shouldDelegateToRepo() {
         when(repo.save(sample)).thenReturn(sample);
@@ -56,6 +59,9 @@ public class AlbumServiceJUnitTest {
         verify(repo).save(sample);
     }
 
+    /**
+     * Test getting an item by id
+     */
     @Test
     public void getById_found() {
         when(repo.findById("A1")).thenReturn(Optional.of(sample));
@@ -64,12 +70,17 @@ public class AlbumServiceJUnitTest {
         assertEquals("Beer in a bear", out.getTitle());
     }
 
+    /**
+     * Test getting an item by id that does not exist
+     */
     @Test(expected = EntityNotFoundException.class)
     public void getById_notFound_throws() {
         when(repo.findById("X")).thenReturn(Optional.empty());
         svc.getById("X");
     }
-
+    /**
+     * Test getting all items
+     */
     @Test
     public void getAll_delegatesToRepo() {
         List<Album> list = List.of(sample);
@@ -78,6 +89,9 @@ public class AlbumServiceJUnitTest {
         assertEquals(list, svc.getAll());
     }
 
+    /**
+     * Test correct return of count of album appearances
+     */
     @Test
     public void sumOfAppearancesOfAlbumContent_returnsCounts() {
         AlbumCount ac = mock(AlbumCount.class);
@@ -95,6 +109,9 @@ public class AlbumServiceJUnitTest {
         assertEquals(42L, result.get(0).getLong().longValue());
     }
 
+    /**
+     * Confirm updating of album metadata
+     */
     @Test
     public void update_existing_updatesFields() {
         Album updated = new Album(
@@ -116,6 +133,9 @@ public class AlbumServiceJUnitTest {
         verify(repo).save(sample);
     }
 
+    /**
+     *Check for correct error throws
+     */
     @Test(expected = EntityNotFoundException.class)
     public void update_missing_throws() {
         when(repo.findById("X")).thenReturn(Optional.empty());
@@ -125,6 +145,9 @@ public class AlbumServiceJUnitTest {
         svc.update(toUpdate);
     }
 
+    /**
+     * Confirm deletion
+     */
     @Test
     public void delete_existing_delegates() {
         when(repo.existsById("A1")).thenReturn(true);
@@ -133,7 +156,9 @@ public class AlbumServiceJUnitTest {
 
         verify(repo).deleteById("A1");
     }
-
+    /**
+     * Confirm correct throw
+     */
     @Test(expected = EntityNotFoundException.class)
     public void delete_missing_throws() {
         when(repo.existsById("X")).thenReturn(false);

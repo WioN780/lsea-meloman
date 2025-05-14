@@ -38,6 +38,9 @@ public class StyleServiceJUnitTest {
         sample = new Style("S1", "Fusion");
     }
 
+    /**
+     *Test adding an item
+     */
     @Test
     public void create_shouldDelegateToRepo() {
         when(repo.save(sample)).thenReturn(sample);
@@ -48,6 +51,9 @@ public class StyleServiceJUnitTest {
         verify(repo).save(sample);
     }
 
+    /**
+     *Test getting by id
+     */
     @Test
     public void getById_found() {
         when(repo.findById("S1")).thenReturn(Optional.of(sample));
@@ -57,12 +63,18 @@ public class StyleServiceJUnitTest {
         assertEquals("Fusion", out.getName());
     }
 
+    /**
+     *Test correct throw when not finding an item
+     */
     @Test(expected = EntityNotFoundException.class)
     public void getById_notFound_throws() {
         when(repo.findById("X")).thenReturn(Optional.empty());
         svc.getById("X");
     }
 
+    /**
+     *Test get all items
+     */
     @Test
     public void getAll_delegatesToRepo() {
         List<Style> all = List.of(sample);
@@ -73,6 +85,9 @@ public class StyleServiceJUnitTest {
         assertEquals(all, out);
     }
 
+    /**
+     * Test order of get most popular
+     */
     @Test
     public void getMostPopular_returnsInOrder() {
         Style second = new Style("S2", "Avant-Garde");
@@ -86,6 +101,9 @@ public class StyleServiceJUnitTest {
         assertEquals("Avant-Garde", result.get(1).getName());
     }
 
+    /**
+     *Test updating items
+     */
     @Test
     public void update_existing_changesName() {
         Style updated = new Style("S1", "Jazz-Fusion");
@@ -98,6 +116,9 @@ public class StyleServiceJUnitTest {
         verify(repo).save(sample);
     }
 
+    /**
+     * Test correct throw error
+     */
     @Test(expected = EntityNotFoundException.class)
     public void update_missing_throws() {
         when(repo.findById("X")).thenReturn(Optional.empty());
@@ -107,6 +128,9 @@ public class StyleServiceJUnitTest {
         svc.update(toUpdate);
     }
 
+    /**
+     * Test deleting item
+     */
     @Test
     public void delete_existing_delegates() {
         when(repo.existsById("S1")).thenReturn(true);
@@ -116,6 +140,9 @@ public class StyleServiceJUnitTest {
         verify(repo).deleteById("S1");
     }
 
+    /**
+     * Test correct throw when deleting nonexistent item
+     */
     @Test(expected = EntityNotFoundException.class)
     public void delete_missing_throws() {
         when(repo.existsById("X")).thenReturn(false);
