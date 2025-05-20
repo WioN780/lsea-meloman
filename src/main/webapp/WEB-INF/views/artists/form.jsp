@@ -2,19 +2,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
   <head>
-    <title><c:out value="${artist.id == null ? 'New' : 'Edit'}"/> Artist</title>
+    <title>
+      <c:out value="${artist.id == null ? 'New' : 'Edit'}"/> Artist
+    </title>
   </head>
   <body>
-    <h1><c:out value="${artist.id == null ? 'New' : 'Edit'}"/> Artist</h1>
+    <h1>
+      <c:out value="${artist.id == null ? 'New' : 'Edit'}"/> Artist
+    </h1>
 
     <c:if test="${not empty error}">
-      <div style="color:red"><c:out value="${error}" /></div>
+      <div style="color:red"><c:out value="${error}"/></div>
     </c:if>
 
     <form method="post"
-          action="${artist.id == null
-            ? pageContext.request.contextPath + '/artists/create'
-            : pageContext.request.contextPath + '/artists/update'}">
+          action="${pageContext.request.contextPath}/artists/${artist.id == null ? 'create' : 'update'}">
 
       <input type="hidden" name="id" value="${artist.id}" />
 
