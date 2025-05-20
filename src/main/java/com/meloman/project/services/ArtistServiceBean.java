@@ -4,6 +4,7 @@ import com.meloman.project.database_model.Artist;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 
 @Stateless
@@ -13,6 +14,10 @@ public class ArtistServiceBean {
     private EntityManager em;
 
     public Artist create(Artist artist) {
+        if (artist.getId() == null) {
+            artist.setId(UUID.randomUUID().toString());
+        }
+
         em.persist(artist);
         return artist;
     }

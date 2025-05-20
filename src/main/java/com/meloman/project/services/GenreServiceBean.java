@@ -5,7 +5,7 @@ import com.meloman.project.database_model.Genre;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
 import java.util.List;
-
+import java.util.UUID;
 
 
 @Stateless
@@ -15,6 +15,10 @@ public class GenreServiceBean {
     private EntityManager em;
 
     public Genre create(Genre genre) {
+        if (genre.getId() == null) {
+            genre.setId(UUID.randomUUID().toString());
+        }
+
         em.persist(genre);
         return genre;
     }
