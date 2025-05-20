@@ -5,8 +5,7 @@ import com.meloman.project.database_model.Style;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
 import java.util.List;
-
-
+import java.util.UUID;
 
 
 @Stateless
@@ -16,6 +15,10 @@ public class StyleServiceBean {
     private EntityManager em;
 
     public Style create(Style style) {
+        if (style.getId() == null) {
+            style.setId(UUID.randomUUID().toString());
+        }
+
         em.persist(style);
         return style;
     }

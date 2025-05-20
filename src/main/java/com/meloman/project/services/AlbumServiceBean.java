@@ -6,6 +6,7 @@ import com.meloman.project.utils.AlbumCountImpl;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 
 @Stateless
@@ -15,6 +16,10 @@ public class AlbumServiceBean {
     private EntityManager em;
 
     public Album create(Album album) {
+        if (album.getId() == null) {
+            album.setId(UUID.randomUUID().toString());
+        }
+
         em.persist(album);
         return album;
     }
