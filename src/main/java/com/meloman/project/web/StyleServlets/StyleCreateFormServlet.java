@@ -16,7 +16,7 @@ public class StyleCreateFormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.setAttribute("Style", new Style());
+        req.setAttribute("style", new Style());
         RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/views/styles/form.jsp");
         rd.forward(req, resp);
     }

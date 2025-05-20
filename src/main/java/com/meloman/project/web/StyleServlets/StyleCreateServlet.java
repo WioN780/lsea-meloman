@@ -24,7 +24,7 @@ public class StyleCreateServlet extends HttpServlet {
         String name = req.getParameter("name");
         if (name == null || name.isBlank()) {
             req.setAttribute("error", "Name must not be empty");
-            req.setAttribute("Style", new Style());
+            req.setAttribute("style", new Style());
             req.getRequestDispatcher("/WEB-INF/views/styles/form.jsp")
                     .forward(req, resp);
             return;

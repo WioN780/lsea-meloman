@@ -24,7 +24,7 @@ public class StyleEditFormServlet extends HttpServlet {
 
         String id = req.getParameter("id");
         Style g = StyleService.getById(id);
-        req.setAttribute("Style", g);
+        req.setAttribute("style", g);
         RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/views/styles/form.jsp");
         rd.forward(req, resp);
     }

@@ -28,7 +28,7 @@ public class StyleUpdateServlet extends HttpServlet {
             Style tmp = new Style();
             tmp.setId(id);
             req.setAttribute("error", "Name must not be empty");
-            req.setAttribute("Style", tmp);
+            req.setAttribute("style", tmp);
             req.getRequestDispatcher("/WEB-INF/views/styles/form.jsp")
                     .forward(req, resp);
             return;

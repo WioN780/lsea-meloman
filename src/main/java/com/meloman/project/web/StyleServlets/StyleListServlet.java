@@ -22,7 +22,7 @@ public class StyleListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         List<Style> Styles = StyleService.getAll();
-        req.setAttribute("Styles", Styles);
+        req.setAttribute("styles", Styles);
         RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/views/styles/list.jsp");
         rd.forward(req, resp);
     }
