@@ -30,7 +30,7 @@
           </td>
           <td>
             <a href="${pageContext.request.contextPath}/artists/edit?id=${a.id}">Edit</a>
-            &nbsp;|&nbsp;
+             |
             <form action="${pageContext.request.contextPath}/artists/delete"
                   method="post" style="display:inline">
               <input type="hidden" name="id" value="${a.id}" />
