@@ -35,5 +35,5 @@ This project follows a multilayered design to ensure scalability and maintainabi
 **Clone the Repository:**
 
    ```bash
-   git clone https://git.pg.edu.pl/pggit_oidc3644111/lsea-labs.git
+   git clone https://github.com/WioN780/lsea-meloman.git
    cd lsea-labs
